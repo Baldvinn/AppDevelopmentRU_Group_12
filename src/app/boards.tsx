@@ -1,3 +1,3 @@
-import boards from "@/views/boards/boards";
+import Boards from "@/views/boards/boards";
 
-export default boards
+export default Boards;

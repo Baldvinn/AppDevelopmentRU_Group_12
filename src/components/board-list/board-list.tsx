@@ -15,14 +15,20 @@ export default function BoardList({ list }: BoardListProps) {
   );
 
   return (
-    <View style={styles.listContainer}>
-      <Text>{list.name}</Text>
+    <View style={[styles.listContainer, { borderColor: list.color || "#fff" }]}>
+      <View
+        style={[styles.listHeader, { backgroundColor: list.color || "#fff" }]}
+      >
+        <Text style={styles.listName}>{list.name}</Text>
+      </View>
 
-      <FlatList<TaskItem>
-        data={list_tasks}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <ListTask task={item} />}
-      />
+      <View style={styles.listContent}>
+        <FlatList<TaskItem>
+          data={list_tasks}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <ListTask task={item} />}
+        />
+      </View>
     </View>
   );
 }

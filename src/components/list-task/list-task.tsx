@@ -1,5 +1,8 @@
+import { headings } from "@/styles/headings";
 import { TaskItem } from "@/types/Task";
-import { Text, View } from "react-native";
+import { router } from "expo-router";
+import { Pressable, Text, View } from "react-native";
+import styles from "./styles";
 
 interface TaskProps {
   task: TaskItem;
@@ -7,9 +10,20 @@ interface TaskProps {
 
 export default function ListTask({ task }: TaskProps) {
   return (
-    <View>
-      <Text>{task.name}</Text>
+    <Pressable
+      style={styles.taskCard}
+      onPress={() =>
+        router.push({
+          pathname: "/task",
+          params: { id: task.id.toString() },
+        })
+      }
+    >
+      <View style={styles.taskHeader}>
+        <Text style={headings.h4}>{task.name}</Text>
+        <Text>{task.isFinished ? "✓" : "○"}</Text>
+      </View>
       <Text>{task.description}</Text>
-    </View>
+    </Pressable>
   );
 }
