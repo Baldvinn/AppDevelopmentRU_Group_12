@@ -16,15 +16,19 @@ export default StyleSheet.create({
         marginTop: 30,
         paddingTop: 10,
         paddingBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        paddingLeft: 40,
+        paddingRight: 40,
         borderColor:ivory,
         borderWidth: 2,
         backgroundColor: lightred,
+        borderRadius:20,
+        elevation: 5, 
     },
 
     buttonText:{
         color:mildblack,
+        fontWeight: 'bold',
+        fontSize: 16
 
 
     },
