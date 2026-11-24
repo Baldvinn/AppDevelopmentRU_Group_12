@@ -36,7 +36,6 @@ export default function RootLayout() {
             title: "Task",
           }}
         />
-
       </Stack>
     </GestureHandlerRootView>
   );
