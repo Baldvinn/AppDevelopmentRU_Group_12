@@ -25,11 +25,18 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="baord"
+          name="board"
           options={{
-            title: "baord",
+            title: "Board",
           }}
         />
+        <Stack.Screen
+          name="task"
+          options={{
+            title: "Task",
+          }}
+        />
+
       </Stack>
     </GestureHandlerRootView>
   );
