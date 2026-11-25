@@ -9,6 +9,8 @@ export default StyleSheet.create({
         borderColor: lightgrey,
         borderRadius: 10,
         padding: 15,
+        flexDirection: "row",
+        alignItems: "center",
         height: 110,
         marginBottom: 12,
     },
@@ -27,5 +29,13 @@ export default StyleSheet.create({
     screen: {
         flex: 1,
         backgroundColor: lightblue,
+    },
+    thumbnail: {
+        width: 80,
+        height: 80,
+    },
+    textBlock: {
+        flex: 1,
+        paddingLeft: 12,
     }
 });
