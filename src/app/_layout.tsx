@@ -6,7 +6,11 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack
         screenOptions={{
-          headerTintColor: "#fff",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: "#fff",
+          },
+          headerTintColor: "#000000",
           headerTitleStyle: {
             fontWeight: "bold",
           },
