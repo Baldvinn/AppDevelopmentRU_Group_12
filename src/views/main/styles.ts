@@ -29,7 +29,5 @@ export default StyleSheet.create({
         color:mildblack,
         fontWeight: 'bold',
         fontSize: 16
-
-
     },
 })

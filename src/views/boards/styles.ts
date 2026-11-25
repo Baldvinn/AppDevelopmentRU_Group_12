@@ -1,14 +1,31 @@
 import { StyleSheet } from "react-native";
-import { lightblue, lightred, ivory, mildblack} from "@/styles/colors";
+import { lightblue, lightgrey, mildblack} from "@/styles/colors";
 
 
 export default StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: lightblue,
-        padding: 20,
-        gap: 40,
+    card: {
+        backgroundColor: "#ffffff",
+        borderWidth: 1,
+        borderColor: lightgrey,
+        borderRadius: 10,
+        padding: 15,
+        height: 110,
+        marginBottom: 12,
     },
-})
+    name: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: mildblack,
+    },
+    description: {
+        fontSize: 14,
+        color: "#666666",
+    },
+    list: {
+        padding: 20,
+    },
+    screen: {
+        flex: 1,
+        backgroundColor: lightblue,
+    }
+});

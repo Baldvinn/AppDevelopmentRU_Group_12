@@ -6,7 +6,8 @@ export default function Main() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <Text>Edit src/views/main.tsx to edit this screen</Text>
+      <Text>Welcome to Toodler
+      </Text>
       <Pressable
         onPress={() => router.push("../boards")}
         style={styles.button}
