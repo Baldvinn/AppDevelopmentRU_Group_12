@@ -10,9 +10,10 @@ export default StyleSheet.create({
   },
 
   boardHeader: {
-    paddingVertical: 12,
-    marginBottom: 16,
+    flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 4,
+    marginBottom: 12,
   },
 
   boardContents: {
@@ -23,5 +24,24 @@ export default StyleSheet.create({
   boardName: {
     ...headings.h2,
     color: colors.mildblack,
+  },
+
+  boardDescription: {
+    marginTop: 2,
+    fontSize: 14,
+    color: colors.mildblack,
+    opacity: 0.7,
+  },
+
+  boardThumbnail: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
+    marginRight: 12,
+    backgroundColor: colors.lightgrey,
+  },
+
+  boardHeaderText: {
+    flex: 1,
   },
 });

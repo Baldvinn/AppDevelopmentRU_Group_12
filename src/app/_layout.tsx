@@ -6,7 +6,7 @@ import { BoardToolbar } from "../components/toolbar/toolbar";
 
 export default function RootLayout() {
   const pathname = usePathname();
-  const hiddenRoutes = ["/", "/boards" ]
+  const hiddenRoutes = ["/", "/boards"];
   const showToolbar = !hiddenRoutes.includes(pathname);
   function handleAddCard() {
     console.log("Add card pressed");
@@ -49,7 +49,6 @@ export default function RootLayout() {
           <BoardToolbar onAddCard={handleAddCard} />
         </SafeAreaView>
       )}
-    
     </GestureHandlerRootView>
   );
 }

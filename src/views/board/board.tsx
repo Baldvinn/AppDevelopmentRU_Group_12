@@ -3,7 +3,7 @@ import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import {
   boards,
   tasks as initialTasks,
@@ -52,18 +52,27 @@ export default function Board() {
     }
   }
 
-  const onToggleTaskFinished = (taskId: number): void => {
+  function onToggleTaskFinished(taskId: number): void {
     setTasks((previousTasks) =>
       previousTasks.map((task) =>
         task.id === taskId ? { ...task, isFinished: !task.isFinished } : task,
       ),
     );
-  };
+  }
 
   return (
     <View style={styles.boardContainer}>
       <View style={styles.boardHeader}>
-        <Text style={styles.boardName}>{board.name}</Text>
+        <Image
+          source={{ uri: board.thumbnailPhoto }}
+          style={styles.boardThumbnail}
+        />
+        <View style={styles.boardHeaderText}>
+          <Text style={styles.boardName}>{board.name}</Text>
+          {board.description ? (
+            <Text style={styles.boardDescription}>{board.description}</Text>
+          ) : null}
+        </View>
       </View>
 
       <View style={styles.boardContents}>
