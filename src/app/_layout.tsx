@@ -14,7 +14,7 @@ export default function RootLayout() {
           headerTintColor: "#000000",
           headerTitle: () => (
             <Pressable
-              onPress={() => router.navigate("/")}
+              onPress={() => router.dismissTo("/")}
               accessibilityRole="button"
               accessibilityLabel="Go to Toodler home"
             >
