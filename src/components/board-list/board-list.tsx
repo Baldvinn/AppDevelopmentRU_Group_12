@@ -7,9 +7,15 @@ import styles from "./styles";
 
 interface BoardListProps {
   list: ListItem;
+  selectedTasks: number[];
+  onTaskLongPress: (id: number) => void;
 }
 
-export default function BoardList({ list }: BoardListProps) {
+export default function BoardList({
+  list,
+  selectedTasks,
+  onTaskLongPress,
+}: BoardListProps) {
   const { width } = useWindowDimensions();
   const columnWidth = Math.min(280, width - 48);
 
@@ -33,7 +39,13 @@ export default function BoardList({ list }: BoardListProps) {
         contentContainerStyle={styles.listContent}
         data={list_tasks}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <ListTask task={item} />}
+        renderItem={({ item }) => (
+          <ListTask
+            task={item}
+            isSelected={selectedTasks.includes(item.id)}
+            onTaskLongPress={onTaskLongPress}
+          />
+        )}
       />
     </View>
   );

@@ -14,4 +14,8 @@ export default StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  selectedTask: {
+    borderWidth: 2,
+    borderColor: "#007AFF",
+  },
 });

@@ -6,18 +6,27 @@ import styles from "./styles";
 
 interface TaskProps {
   task: TaskItem;
+  isSelected: boolean;
+  onTaskLongPress: (id: number) => void;
 }
 
-export default function ListTask({ task }: TaskProps) {
+export default function ListTask({
+  task,
+  isSelected,
+  onTaskLongPress,
+}: TaskProps) {
   return (
     <Pressable
-      style={styles.taskCard}
-      onPress={() =>
-        router.push({
-          pathname: "/task",
-          params: { id: task.id.toString() },
-        })
-      }
+      style={[styles.taskCard, isSelected && styles.selectedTask]}
+      onLongPress={() => onTaskLongPress(task.id)}
+      onPress={() => {
+        if (!isSelected) {
+          router.push({
+            pathname: "/task",
+            params: { id: task.id.toString() },
+          });
+        }
+      }}
     >
       <View style={styles.taskHeader}>
         <Text style={headings.h4}>{task.name}</Text>
