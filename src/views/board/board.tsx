@@ -1,14 +1,26 @@
 import BoardList from "@/components/board-list/board-list";
 import { ListItem } from "@/types/List";
-import { useLocalSearchParams } from "expo-router";
+import { TaskItem } from "@/types/Task";
+import { router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
-import { boards, lists } from "../../resources/data.json";
+import {
+  boards,
+  tasks as initialTasks,
+  lists,
+} from "../../resources/data.json";
 import styles from "./styles";
 
 export default function Board() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const board = boards.find((item) => item.id === Number(id));
+
+  // All Tasks within application directory
+  const [tasks, setTasks] = useState<TaskItem[]>(initialTasks);
+
+  // All selected tasks
+  const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
 
   if (!board) {
     return <Text>Board not found</Text>;
@@ -17,6 +29,36 @@ export default function Board() {
   const board_lists: ListItem[] = lists.filter(
     (list) => list.boardId === board.id,
   );
+
+  // Helper functions
+  function onTaskLongPress(taskId: number): void {
+    setSelectedTasks((previousTasks) => {
+      if (previousTasks.includes(taskId)) {
+        return previousTasks.filter((id) => id !== taskId);
+      } else {
+        return [...previousTasks, taskId];
+      }
+    });
+  }
+
+  function onTaskPress(taskId: number): void {
+    if (selectedTasks.length > 0) {
+      onTaskLongPress(taskId);
+    } else {
+      router.push({
+        pathname: "/task",
+        params: { id: taskId.toString() },
+      });
+    }
+  }
+
+  const onToggleTaskFinished = (taskId: number): void => {
+    setTasks((previousTasks) =>
+      previousTasks.map((task) =>
+        task.id === taskId ? { ...task, isFinished: !task.isFinished } : task,
+      ),
+    );
+  };
 
   return (
     <View style={styles.boardContainer}>
@@ -30,7 +72,17 @@ export default function Board() {
           style={{ flex: 1 }}
           data={board_lists}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <BoardList list={item} />}
+          renderItem={({ item }) => (
+            <BoardList
+              list={item}
+              tasks={tasks.filter((task) => task.listId === item.id)}
+              selectedTasks={selectedTasks}
+              onTaskPress={onTaskPress}
+              onTaskLongPress={onTaskLongPress}
+              onToggleTaskFinished={onToggleTaskFinished}
+            />
+          )}
+          extraData={{ tasks, selectedTasks }}
         />
       </View>
     </View>
