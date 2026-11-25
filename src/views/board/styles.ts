@@ -5,17 +5,20 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   boardContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
+    padding: 16,
     backgroundColor: colors.lightblue,
   },
 
   boardHeader: {
-    padding: 10,
+    paddingVertical: 12,
+    marginBottom: 16,
+    alignItems: "center",
   },
 
-  boardContents: {},
+  boardContents: {
+    flex: 1,
+    minHeight: 0,
+  },
 
   boardName: {
     ...headings.h2,

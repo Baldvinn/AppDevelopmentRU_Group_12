@@ -27,6 +27,7 @@ export default function Board() {
       <View style={styles.boardContents}>
         <FlatList<ListItem>
           horizontal
+          style={{ flex: 1 }}
           data={board_lists}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <BoardList list={item} />}

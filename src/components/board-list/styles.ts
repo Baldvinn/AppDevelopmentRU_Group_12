@@ -4,27 +4,38 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   listContainer: {
-    width: 280,
-    borderRadius: 10,
-    overflow: "hidden",
+    height: "100%",
+    borderRadius: 12,
     marginRight: 12,
     backgroundColor: "#fff",
-    elevation: 5,
+    overflow: "hidden",
+
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
   },
 
   listHeader: {
-    padding: 12,
+    padding: 14,
+    backgroundColor: "#D4EAFB",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
 
   listContent: {
     padding: 12,
-    backgroundColor: "#fff",
   },
 
   listName: {
     ...headings.h3,
     color: colors.mildblack,
+  },
+
+  taskList: {
+    flex: 1,
+    minHeight: 0,
   },
 });
