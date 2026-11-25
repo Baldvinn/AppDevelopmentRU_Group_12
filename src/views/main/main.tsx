@@ -1,24 +1,33 @@
-import { Text, TouchableOpacity, View} from "react-native";
-import styles from "./styles";
 import { useRouter } from "expo-router";
+import { Pressable, Text, View } from "react-native";
+import styles from "./styles";
 
 export default function Main() {
-  const router = useRouter();  
+  const router = useRouter();
   return (
     <View style={styles.container}>
-      <Text>Edit src/views/main.tsx to edit this screen
+      <Text>Welcome to Toodler
       </Text>
-      <TouchableOpacity
-        onPress={() => router.push("/boards")}
+      <Pressable
+        onPress={() => router.push("../boards")}
         style={styles.button}
         accessibilityLabel="Go to boards"
         accessibilityRole="button"
-        >
-
+      >
         <Text style={styles.buttonText}>Boards</Text>
-      </TouchableOpacity>
+      </Pressable>
+
+      {/*For Board View testing purposes!*/}
+      <Pressable
+        onPress={() =>
+          router.push({ pathname: "../board", params: { id: "1" } })
+        }
+        style={styles.button}
+        accessibilityLabel="Go to board"
+        accessibilityRole="button"
+      >
+        <Text style={styles.buttonText}>Board</Text>
+      </Pressable>
     </View>
   );
 }
-
-
