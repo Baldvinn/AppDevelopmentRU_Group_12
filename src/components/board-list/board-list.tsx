@@ -1,3 +1,4 @@
+import { getTextColorFor } from "@/styles/colors";
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { FlatList, Text, useWindowDimensions, View } from "react-native";
@@ -16,16 +17,16 @@ interface BoardListProps {
 export default function BoardList(props: BoardListProps) {
   const { width } = useWindowDimensions();
   const columnWidth = Math.min(280, width - 48);
+  const headerColor = props.list.color || "#D4EAFB";
 
   return (
     <View style={[styles.listContainer, { width: columnWidth }]}>
-      <View
-        style={[
-          styles.listHeader,
-          { backgroundColor: props.list.color || "#D4EAFB" },
-        ]}
-      >
-        <Text style={styles.listName}>{props.list.name}</Text>
+      <View style={[styles.listHeader, { backgroundColor: headerColor }]}>
+        <Text
+          style={[styles.listName, { color: getTextColorFor(headerColor) }]}
+        >
+          {props.list.name}
+        </Text>
       </View>
 
       <FlatList<TaskItem>
