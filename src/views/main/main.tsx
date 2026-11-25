@@ -21,18 +21,6 @@ export default function Main() {
       >
         <Text style={styles.buttonText}>Boards</Text>
       </Pressable>
-
-      {/*For Board View testing purposes!*/}
-      <Pressable
-        onPress={() =>
-          router.push({ pathname: "../board", params: { id: "1" } })
-        }
-        style={styles.button}
-        accessibilityLabel="Go to board"
-        accessibilityRole="button"
-      >
-        <Text style={styles.buttonText}>Board</Text>
-      </Pressable>
     </View>
   );
 }
