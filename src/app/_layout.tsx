@@ -1,4 +1,5 @@
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
+import { Pressable, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function RootLayout() {
@@ -11,35 +12,29 @@ export default function RootLayout() {
             backgroundColor: "#fff",
           },
           headerTintColor: "#000000",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
+          headerTitle: () => (
+            <Pressable
+              onPress={() => router.navigate("/")}
+              accessibilityRole="button"
+              accessibilityLabel="Go to Toodler home"
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  color: "#000000",
+                }}
+              >
+                Toodler
+              </Text>
+            </Pressable>
+          ),
         }}
       >
-        <Stack.Screen
-          name="index"
-          options={{
-            title: "Main",
-          }}
-        />
-        <Stack.Screen
-          name="boards"
-          options={{
-            title: "Boards",
-          }}
-        />
-        <Stack.Screen
-          name="board"
-          options={{
-            title: "Board",
-          }}
-        />
-        <Stack.Screen
-          name="task"
-          options={{
-            title: "Task",
-          }}
-        />
+        <Stack.Screen name="index" />
+        <Stack.Screen name="boards" />
+        <Stack.Screen name="board" />
+        <Stack.Screen name="task" />
       </Stack>
     </GestureHandlerRootView>
   );
