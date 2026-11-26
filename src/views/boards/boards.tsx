@@ -1,6 +1,6 @@
 import AppButton from "@/components/appbutton/appbutton";
 import BoardForm from "@/components/board-form/board-form";
-import { Modal } from "@/components/modal/task-modal";
+import { Modal } from "@/components/modal/modal";
 import { addBoards, useBoards } from "@/saved/boardSave";
 import { router } from "expo-router";
 import { useState } from "react";
