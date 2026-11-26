@@ -1,6 +1,6 @@
 import BoardList from "@/components/board-list/board-list";
 import CheckButton from "@/components/check-button/check-button";
-import { Modal } from "@/components/modal/task-modal";
+import { Modal } from "@/components/modal/modal";
 import { useBoards } from "@/saved/boardSave";
 import { useLists } from "@/saved/listSave";
 import { addTask, toggleTaskFinished, useTasks } from "@/saved/taskSave";
