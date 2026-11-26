@@ -1,7 +1,7 @@
 import BoardList from "@/components/board-list/board-list";
 import { useBoards } from "@/saved/boardSave";
 import { useLists } from "@/saved/listSave";
-import { toggleTaskFinished, useTasks } from "@/saved/taskSave";
+import { toggleTaskFinished, useTasks, addTask } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -20,6 +20,10 @@ export default function Board() {
 
   // Find the appropriate board
   const board = boards.find((item) => item.id === Number(id));
+
+  const onCreateTask = (name: string, description: string, listId: number) => {
+    addTask({ name, description, listId, isFinished: false});
+  };
 
   if (!board) {
     return <Text>Board not found</Text>;
@@ -80,6 +84,7 @@ export default function Board() {
               onTaskPress={onTaskPress}
               onTaskLongPress={onTaskLongPress}
               onToggleTaskFinished={toggleTaskFinished}
+              onCreateTask={onCreateTask}
             />
           )}
           extraData={{ selectedTasks }}
