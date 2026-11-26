@@ -1,5 +1,7 @@
+import AppButton from "@/components/appbutton/appbutton";
 import { Modal, Text, TextInput, View } from "react-native";
 import styles from "./styles";
+import { useState } from "react";
 
 interface CreateBoardModalProps {
   visible: boolean;
@@ -10,6 +12,9 @@ export default function CreateBoardModal({
   visible,
   onClose,
 }: CreateBoardModalProps) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [thumbnailPhoto, setThumbnailPhoto] = useState("");
   return (
     <Modal
       visible={visible}
@@ -25,21 +30,35 @@ export default function CreateBoardModal({
             style={styles.input}
             placeholder="Enter board name"
             placeholderTextColor="grey"
+            value={name}
+            onChangeText={setName}
           />
           <Text>Description</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter a description"
             placeholderTextColor="grey"
-            multiline
+            value={description}
+            onChangeText={setDescription}
           />
           <Text>Image URL</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Image URL"
             placeholderTextColor="grey"
+            value={thumbnailPhoto}
+            onChangeText={setThumbnailPhoto}
           />
-          <Text onPress={onClose}>Cancel</Text>
+          <AppButton
+            label="Create new board"
+            marginTop={10}
+            onPress={() => {}}
+          ></AppButton>
+          <AppButton
+            label="Cancel"
+            marginTop={10}
+            onPress={onClose}
+          ></AppButton>
         </View>
       </View>
     </Modal>

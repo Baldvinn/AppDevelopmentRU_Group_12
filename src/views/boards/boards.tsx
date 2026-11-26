@@ -8,9 +8,6 @@ import CreateBoardModal from "@/components/create-board-modal/create-board-modal
 
 export default function Boards() {
     const [createBoardVisible, setCreateBoardVisible] = useState(false);
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [thumbnailPhoto, setThumbnailPhoto] = useState("");
     return (
         <View style={styles.screen}>
             <FlatList
