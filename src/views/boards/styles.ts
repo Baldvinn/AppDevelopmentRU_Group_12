@@ -37,5 +37,10 @@ export default StyleSheet.create({
     textBlock: {
         flex: 1,
         paddingLeft: 12,
+    },
+    buttonContainer: {
+        paddingHorizontal: 20,
+        paddingBottom: 40,
+        paddingTop: 10,
     }
 });
