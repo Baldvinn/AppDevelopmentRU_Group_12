@@ -21,6 +21,7 @@ export default function Board() {
   // All selected tasks
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
 
+  // Id of open task in modal
   const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
 
   // Find the appropriate board
@@ -62,6 +63,7 @@ export default function Board() {
 
   return (
     <View style={styles.boardContainer}>
+      {/* Board header */}
       <View style={styles.boardHeader}>
         <Image
           source={{ uri: board.thumbnailPhoto }}
@@ -75,6 +77,7 @@ export default function Board() {
         </View>
       </View>
 
+      {/* Contents of a board */}
       <View style={styles.boardContents}>
         <FlatList<ListItem>
           horizontal
@@ -95,6 +98,8 @@ export default function Board() {
           extraData={{ selectedTasks }}
         />
       </View>
+
+      {/* Modal for viewing tasks*/}
       {viewedTask && (
         <Modal
           title={viewedTask.name}
