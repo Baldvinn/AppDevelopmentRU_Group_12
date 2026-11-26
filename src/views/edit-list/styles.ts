@@ -1,0 +1,46 @@
+import { StyleSheet } from "react-native";
+import { lightblue, lightgrey, mildblack } from "@/styles/colors";
+
+
+export default StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: lightblue,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: mildblack,
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    input: {
+        backgroundColor: "#ffffff",
+        borderWidth: 1,
+        borderColor: lightgrey,
+        borderRadius: 8,
+        padding: 12,
+        fontSize: 16,
+    },
+    error: {
+        color: "#cc0000",
+        marginTop: 4,
+    },
+    colorRow: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 12,
+    },
+    colorCircle: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: lightgrey,
+    },
+    colorSelected: {
+        borderWidth: 3,
+        borderColor: mildblack,
+    },
+})

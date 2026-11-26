@@ -1,34 +1,45 @@
 import BoardList from "@/components/board-list/board-list";
+import CheckButton from "@/components/check-button/check-button";
+import { Modal } from "@/components/modal/task-modal";
+import { useBoards } from "@/saved/boardSave";
+import { useLists } from "@/saved/listSave";
+import { toggleTaskFinished, useTasks, addTask } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
-import { TaskItem } from "@/types/Task";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { FlatList, Text, View } from "react-native";
-import {
-  boards,
-  tasks as initialTasks,
-  lists,
-} from "../../resources/data.json";
+import { FlatList, Image, Text, View } from "react-native";
 import styles from "./styles";
 
 export default function Board() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const board = boards.find((item) => item.id === Number(id));
-
-  // All Tasks within application directory
-  const [tasks, setTasks] = useState<TaskItem[]>(initialTasks);
+  // Fetch all items
+  const boards = useBoards();
+  const tasks = useTasks();
+  const lists = useLists();
 
   // All selected tasks
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
+
+  const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
+
+  // Find the appropriate board
+  const board = boards.find((item) => item.id === Number(id));
+
+  const onCreateTask = (name: string, description: string, listId: number) => {
+    addTask({ name, description, listId, isFinished: false});
+  };
 
   if (!board) {
     return <Text>Board not found</Text>;
   }
 
+  // All lists on this board
   const board_lists: ListItem[] = lists.filter(
     (list) => list.boardId === board.id,
   );
+
+  const viewedTask = tasks.find((task) => task.id === viewedTaskId);
 
   // Helper functions
   function onTaskLongPress(taskId: number): void {
@@ -45,25 +56,23 @@ export default function Board() {
     if (selectedTasks.length > 0) {
       onTaskLongPress(taskId);
     } else {
-      router.push({
-        pathname: "/task",
-        params: { id: taskId.toString() },
-      });
+      setViewedTaskId(taskId);
     }
   }
-
-  const onToggleTaskFinished = (taskId: number): void => {
-    setTasks((previousTasks) =>
-      previousTasks.map((task) =>
-        task.id === taskId ? { ...task, isFinished: !task.isFinished } : task,
-      ),
-    );
-  };
 
   return (
     <View style={styles.boardContainer}>
       <View style={styles.boardHeader}>
-        <Text style={styles.boardName}>{board.name}</Text>
+        <Image
+          source={{ uri: board.thumbnailPhoto }}
+          style={styles.boardThumbnail}
+        />
+        <View style={styles.boardHeaderText}>
+          <Text style={styles.boardName}>{board.name}</Text>
+          {board.description ? (
+            <Text style={styles.boardDescription}>{board.description}</Text>
+          ) : null}
+        </View>
       </View>
 
       <View style={styles.boardContents}>
@@ -79,12 +88,26 @@ export default function Board() {
               selectedTasks={selectedTasks}
               onTaskPress={onTaskPress}
               onTaskLongPress={onTaskLongPress}
-              onToggleTaskFinished={onToggleTaskFinished}
+              onToggleTaskFinished={toggleTaskFinished}
+              onCreateTask={onCreateTask}
             />
           )}
-          extraData={{ tasks, selectedTasks }}
+          extraData={{ selectedTasks }}
         />
       </View>
+      {viewedTask && (
+        <Modal
+          title={viewedTask.name}
+          isOpen={true}
+          closeModal={() => setViewedTaskId(null)}
+        >
+          <Text>{viewedTask.description}</Text>
+          <CheckButton
+            task={viewedTask}
+            onToggleTaskFinished={toggleTaskFinished}
+          />
+        </Modal>
+      )}
     </View>
   );
 }

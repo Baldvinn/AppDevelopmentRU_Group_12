@@ -1,10 +1,17 @@
+import { useBoards } from "@/saved/boardSave";
+import { useLists } from "@/saved/listSave";
+import { useTasks } from "@/saved/taskSave";
 import { router, useLocalSearchParams } from "expo-router";
 import { Pressable, Text, View } from "react-native";
-import { boards, lists, tasks } from "../../resources/data.json";
 import styles from "./styles";
 
 export default function Task() {
   const { id } = useLocalSearchParams<{ id: string }>();
+
+  // Fetch all items
+  const boards = useBoards();
+  const tasks = useTasks();
+  const lists = useLists();
 
   const task = tasks.find((item) => item.id === Number(id));
   const list = lists.find((item) => item.id === task?.listId);
