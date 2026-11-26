@@ -1,3 +1,4 @@
+
 import { router, useLocalSearchParams } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { boards, lists, tasks } from "../../resources/data.json";

@@ -1,7 +1,9 @@
 import { getTextColorFor } from "@/styles/colors";
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
-import { FlatList, Text, useWindowDimensions, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
 import ListTask from "../list-task/list-task";
 import styles from "./styles";
 
@@ -18,15 +20,26 @@ export default function BoardList(props: BoardListProps) {
   const { width } = useWindowDimensions();
   const columnWidth = Math.min(280, width - 48);
   const headerColor = props.list.color || "#D4EAFB";
+  const headerTextColor = getTextColorFor(headerColor);
 
   return (
     <View style={[styles.listContainer, { width: columnWidth }]}>
       <View style={[styles.listHeader, { backgroundColor: headerColor }]}>
-        <Text
-          style={[styles.listName, { color: getTextColorFor(headerColor) }]}
-        >
+        <Text style={[styles.listName, { color: headerTextColor }]}>
           {props.list.name}
         </Text>
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "/edit-list",
+              params: { id: props.list.id.toString() },
+            })
+          }
+          style={styles.editButton}
+        >
+          <Ionicons name="pencil" size={16} color={headerTextColor} />
+          <Text style={[styles.editText, { color: headerTextColor }]}>Edit</Text>
+        </Pressable>
       </View>
 
       <FlatList<TaskItem>
