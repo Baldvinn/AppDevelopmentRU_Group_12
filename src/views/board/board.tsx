@@ -1,4 +1,5 @@
 import BoardList from "@/components/board-list/board-list";
+import { useLists } from "@/saved/listSave";
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { router, useLocalSearchParams } from "expo-router";
@@ -7,7 +8,6 @@ import { FlatList, Image, Text, View } from "react-native";
 import {
   boards,
   tasks as initialTasks,
-  lists,
 } from "../../resources/data.json";
 import styles from "./styles";
 
@@ -21,6 +21,8 @@ export default function Board() {
 
   // All selected tasks
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
+
+  const lists = useLists();
 
   if (!board) {
     return <Text>Board not found</Text>;

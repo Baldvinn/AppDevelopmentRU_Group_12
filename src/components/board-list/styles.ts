@@ -38,4 +38,16 @@ export default StyleSheet.create({
     flex: 1,
     minHeight: 0,
   },
+  editButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginLeft: 8,
+    padding: 6,
+  },
+  editText: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "#1A1A1A",
+  },
 });
