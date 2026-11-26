@@ -1,6 +1,7 @@
 import AppButton from "@/components/appbutton/appbutton";
-import CreateBoardModal from "@/components/create-board-modal/create-board-modal";
-import { useBoards } from "@/saved/boardSave";
+import BoardForm from "@/components/board-form/board-form";
+import { Modal } from "@/components/modal/task-modal";
+import { addBoards, useBoards } from "@/saved/boardSave";
 import { router } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
@@ -45,10 +46,19 @@ export default function Boards() {
         />
       </View>
 
-      <CreateBoardModal
-        visible={createBoardVisible}
-        onClose={() => setCreateBoardVisible(false)}
-      ></CreateBoardModal>
+      <Modal
+        title="Create new board"
+        isOpen={createBoardVisible}
+        closeModal={() => setCreateBoardVisible(false)}
+      >
+        <BoardForm
+          submitLabel="Create Board"
+          onSubmit={(values) => {
+            addBoards(values);
+            setCreateBoardVisible(false);
+          }}
+        ></BoardForm>
+      </Modal>
     </View>
   );
 }
