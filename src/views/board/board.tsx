@@ -1,9 +1,11 @@
 import BoardList from "@/components/board-list/board-list";
+import CheckButton from "@/components/check-button/check-button";
+import { Modal } from "@/components/modal/task-modal";
 import { useBoards } from "@/saved/boardSave";
 import { useLists } from "@/saved/listSave";
 import { toggleTaskFinished, useTasks, addTask } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import styles from "./styles";
@@ -15,8 +17,11 @@ export default function Board() {
   const boards = useBoards();
   const tasks = useTasks();
   const lists = useLists();
+
   // All selected tasks
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
+
+  const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
 
   // Find the appropriate board
   const board = boards.find((item) => item.id === Number(id));
@@ -29,9 +34,12 @@ export default function Board() {
     return <Text>Board not found</Text>;
   }
 
+  // All lists on this board
   const board_lists: ListItem[] = lists.filter(
     (list) => list.boardId === board.id,
   );
+
+  const viewedTask = tasks.find((task) => task.id === viewedTaskId);
 
   // Helper functions
   function onTaskLongPress(taskId: number): void {
@@ -48,10 +56,7 @@ export default function Board() {
     if (selectedTasks.length > 0) {
       onTaskLongPress(taskId);
     } else {
-      router.push({
-        pathname: "/task",
-        params: { id: taskId.toString() },
-      });
+      setViewedTaskId(taskId);
     }
   }
 
@@ -90,6 +95,19 @@ export default function Board() {
           extraData={{ selectedTasks }}
         />
       </View>
+      {viewedTask && (
+        <Modal
+          title={viewedTask.name}
+          isOpen={true}
+          closeModal={() => setViewedTaskId(null)}
+        >
+          <Text>{viewedTask.description}</Text>
+          <CheckButton
+            task={viewedTask}
+            onToggleTaskFinished={toggleTaskFinished}
+          />
+        </Modal>
+      )}
     </View>
   );
 }
