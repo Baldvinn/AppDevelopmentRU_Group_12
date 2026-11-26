@@ -1,7 +1,7 @@
 import { headings } from "@/styles/headings";
 import { TaskItem } from "@/types/Task";
-import { AntDesign } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
+import CheckButton from "../check-button/check-button";
 import styles from "./styles";
 
 interface TaskProps {
@@ -31,18 +31,10 @@ export default function ListTask(props: TaskProps) {
           {props.task.name}
         </Text>
 
-        <Pressable
-          style={styles.checkButton}
-          onPress={() => props.onToggleTaskFinished(props.task.id)}
-          accessibilityRole="checkbox"
-          accessibilityState={{ checked: props.task.isFinished }}
-        >
-          {props.task.isFinished ? (
-            <AntDesign name="check-circle" size={24} color="#16A34A" />
-          ) : (
-            <View style={styles.emptyCircle} />
-          )}
-        </Pressable>
+        <CheckButton
+          task={props.task}
+          onToggleTaskFinished={props.onToggleTaskFinished}
+        />
       </View>
       <Text>{props.task.description}</Text>
     </Pressable>
