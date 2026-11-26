@@ -3,11 +3,17 @@ import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
+import { useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import AddTask from "../add-task/add-task";
 import ListTask from "../list-task/list-task";
 import styles from "./styles";
-import { useState } from 'react';
-import AddTask from "../add-task/add-task";
 
 interface BoardListProps {
   list: ListItem;
@@ -26,20 +32,20 @@ export default function BoardList(props: BoardListProps) {
   const headerTextColor = getTextColorFor(headerColor);
   const [showAddTask, setShowAddTask] = useState(false);
 
-
   return (
     <View style={[styles.listContainer, { width: columnWidth }]}>
       <View style={[styles.listHeader, { backgroundColor: headerColor }]}>
-            <Pressable
-            onPress={() => setShowAddTask((open) => !open)} 
-            style={styles.sideAction}>
-            <Ionicons name="add-circle" size={24} color={headerTextColor} />
-            </Pressable>
+        <Pressable
+          onPress={() => setShowAddTask((open) => !open)}
+          style={styles.sideAction}
+        >
+          <Ionicons name="add-circle" size={24} color={headerTextColor} />
+        </Pressable>
         <Text style={[styles.listName, { color: headerTextColor }]}>
           {props.list.name}
         </Text>
         <Pressable
-        style={styles.sideAction}
+          style={styles.sideAction}
           onPress={() =>
             router.push({
               pathname: "/edit-list",
@@ -48,15 +54,19 @@ export default function BoardList(props: BoardListProps) {
           }
         >
           <Ionicons name="pencil" size={16} color={headerTextColor} />
-          <Text style={[styles.editText, { color: headerTextColor }]}>Edit</Text>
+          <Text style={[styles.editText, { color: headerTextColor }]}>
+            Edit
+          </Text>
         </Pressable>
       </View>
 
       {showAddTask && (
-        <AddTask onAddTask={(name, description) => {
-          props.onCreateTask(name, description, props.list.id);
-          setShowAddTask(false);
-        }}/> 
+        <AddTask
+          onAddTask={(name, description) => {
+            props.onCreateTask(name, description, props.list.id);
+            setShowAddTask(false);
+          }}
+        />
       )}
 
       <FlatList<TaskItem>
