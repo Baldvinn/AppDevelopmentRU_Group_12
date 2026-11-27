@@ -1,7 +1,13 @@
 import AppButton from "@/components/appbutton/appbutton";
-import BoardForm from "@/components/board-form/board-form";
+import BoardForm from "@/components/forms/board-form/board-form";
 import { Modal } from "@/components/modal/modal";
-import { addBoards, updateBoards, useBoards } from "@/saved/boardSave";
+import { BoardToolbar } from "@/components/toolbar/toolbar";
+import {
+  addBoards,
+  deleteBoard,
+  updateBoards,
+  useBoards,
+} from "@/saved/boardSave";
 import { mildblack } from "@/styles/colors";
 import { BoardItem } from "@/types/Board";
 import { Ionicons } from "@expo/vector-icons";
@@ -9,21 +15,19 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import styles from "./styles";
-import { BoardToolbar } from "@/components/toolbar/toolbar";
-import { deleteBoard } from "@/saved/boardSave"; 
 
 export default function Boards() {
   const [createBoardVisible, setCreateBoardVisible] = useState(false);
   const [editingBoard, setEditingBoard] = useState<BoardItem | null>(null);
-  const [selectedBoards, setSelectedBoards ] = useState<number[]>([]);
+  const [selectedBoards, setSelectedBoards] = useState<number[]>([]);
   const boards = useBoards();
 
-function toggleBoardSelection(boardId: number): void {
-  setSelectedBoards((previousBoards) =>
-    previousBoards.includes(boardId)
-      ? previousBoards.filter((id) => id !== boardId)
-      : [...previousBoards, boardId],
-  );
+  function toggleBoardSelection(boardId: number): void {
+    setSelectedBoards((previousBoards) =>
+      previousBoards.includes(boardId)
+        ? previousBoards.filter((id) => id !== boardId)
+        : [...previousBoards, boardId],
+    );
   }
 
   function handleDeleteSelectedBoards(): void {
@@ -40,9 +44,11 @@ function toggleBoardSelection(boardId: number): void {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <Pressable
-            style={[styles.card, selectedBoards.includes(item.id) && styles.selectedCard,]}
-            onLongPress={() =>
-              toggleBoardSelection(item.id)}
+            style={[
+              styles.card,
+              selectedBoards.includes(item.id) && styles.selectedCard,
+            ]}
+            onLongPress={() => toggleBoardSelection(item.id)}
             onPress={() =>
               router.push({
                 pathname: "/board",
@@ -109,6 +115,5 @@ function toggleBoardSelection(boardId: number): void {
         )}
       </Modal>
     </View>
-    
   );
 }

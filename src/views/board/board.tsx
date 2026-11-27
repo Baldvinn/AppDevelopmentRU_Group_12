@@ -1,4 +1,5 @@
 import BoardList from "@/components/board-list/board-list";
+import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
 import { BoardToolbar } from "@/components/toolbar/toolbar";
@@ -8,6 +9,7 @@ import {
   addTask,
   moveTask,
   toggleTaskFinished,
+  updateTask,
   useTasks,
 } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
@@ -32,6 +34,12 @@ export default function Board() {
 
   // Id of open task in modal
   const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
+
+  // If task is being edited
+  const [editingTask, setEditingTask] = useState(false);
+
+  // List id the new task is being added to (null = modal closed)
+  const [addingToListId, setAddingToListId] = useState<number | null>(null);
 
   // Find the appropriate board
   const board = boards.find((item) => item.id === Number(id));
@@ -119,6 +127,7 @@ export default function Board() {
               onCreateTask={onCreateTask}
               isListSelected={selectedLists.includes(item.id)}
               onListLongPress={onListLongPress}
+              onAddTaskPress={(listId) => setAddingToListId(listId)}
             />
           )}
           extraData={{ selectedTasks, selectedLists }}
@@ -130,16 +139,47 @@ export default function Board() {
       {viewedTask && (
         <Modal
           task={viewedTask}
-          title={viewedTask.name}
+          title={editingTask ? "Edit task" : viewedTask.name}
           isOpen={true}
-          closeModal={() => setViewedTaskId(null)}
+          closeModal={() => {
+            setViewedTaskId(null);
+            setEditingTask(false);
+          }}
         >
-          <TaskDetails
-            boardLists={board_lists}
-            task={viewedTask}
-            onToggleTaskFinished={toggleTaskFinished}
-            onMoveTask={moveTask}
-          ></TaskDetails>
+          {/* Open task editing modal, else details modal */}
+          {editingTask ? (
+            <TaskForm
+              initialValues={viewedTask}
+              submitLabel="Save changes"
+              onSubmit={(values) => {
+                updateTask(viewedTask.id, values);
+                setEditingTask(false);
+              }}
+            />
+          ) : (
+            <TaskDetails
+              boardLists={board_lists}
+              task={viewedTask}
+              onToggleTaskFinished={toggleTaskFinished}
+              onMoveTask={moveTask}
+              onOpenEditing={() => setEditingTask(true)}
+            />
+          )}
+        </Modal>
+      )}
+      {addingToListId !== null && (
+        <Modal
+          title="Add new task"
+          isOpen={true}
+          closeModal={() => setAddingToListId(null)}
+        >
+          <TaskForm
+            submitLabel="Add task"
+            onSubmit={(values) => {
+              addTask({ ...values, listId: addingToListId, isFinished: false });
+              setAddingToListId(null);
+            }}
+          />
         </Modal>
       )}
     </View>
