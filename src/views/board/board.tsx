@@ -49,6 +49,8 @@ export default function Board() {
   // List id the new task is being added to (null = modal closed)
   const [addingToListId, setAddingToListId] = useState<number | null>(null);
 
+  const [confirmingListDelete, setConfirmingListDelete] = useState(false);
+
   // Find the appropriate board
   const board = boards.find((item) => item.id === Number(id));
 
@@ -90,6 +92,12 @@ export default function Board() {
   function handleDeleteSelectedLists(): void {
     selectedLists.forEach(deleteList);
     setSelectedLists([]);
+    setConfirmingListDelete(false);
+  }
+
+  function requestDeleteSelectedLists(): void {
+    if (selectedLists.length === 0) return;
+    setConfirmingListDelete(true);
   }
 
   function onTaskPress(taskId: number): void {
@@ -152,7 +160,20 @@ export default function Board() {
         />
       </View>
 
-      <BoardToolbar onDeleteCard={handleDeleteSelectedLists} />
+      <BoardToolbar onDeleteCard={requestDeleteSelectedLists} />
+      {confirmingListDelete && (
+        <Modal
+        title="Delete lists?"
+        isOpen={confirmingListDelete}
+        closeModal={() => setConfirmingListDelete(false)}
+        >
+          <ConfirmDelete
+          message={`${selectedLists.length} list(s) and their tasks will be deleted. This can't be undone.`}
+          onConfirm={handleDeleteSelectedLists}
+          onCancel={() => setConfirmingListDelete(false)}
+          />
+        </Modal>
+      )}
       {/* Modal for viewing tasks*/}
       {viewedTask && (
         <Modal
