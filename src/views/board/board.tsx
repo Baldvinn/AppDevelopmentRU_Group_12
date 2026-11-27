@@ -1,16 +1,20 @@
 import BoardList from "@/components/board-list/board-list";
-import CheckButton from "@/components/check-button/check-button";
 import { Modal } from "@/components/modal/modal";
+import TaskDetails from "@/components/task-details/task-details";
+import { BoardToolbar } from "@/components/toolbar/toolbar";
 import { useBoards } from "@/saved/boardSave";
-import { useLists } from "@/saved/listSave";
-import { addTask, toggleTaskFinished, useTasks } from "@/saved/taskSave";
+import { deleteList, useLists } from "@/saved/listSave";
+import {
+  addTask,
+  moveTask,
+  toggleTaskFinished,
+  useTasks,
+} from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import styles from "./styles";
-import { BoardToolbar } from "@/components/toolbar/toolbar";
-import { deleteList } from "@/saved/listSave";
 
 export default function Board() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -32,10 +36,6 @@ export default function Board() {
   // Find the appropriate board
   const board = boards.find((item) => item.id === Number(id));
 
-  const onCreateTask = (name: string, description: string, listId: number) => {
-    addTask({ name, description, listId, isFinished: false });
-  };
-
   if (!board) {
     return <Text>Board not found</Text>;
   }
@@ -45,6 +45,7 @@ export default function Board() {
     (list) => list.boardId === board.id,
   );
 
+  // Get the task being viewed in the modal
   const viewedTask = tasks.find((task) => task.id === viewedTaskId);
 
   // Helper functions
@@ -58,7 +59,7 @@ export default function Board() {
     });
   }
 
-  function onListLongPress (listId: number):void {
+  function onListLongPress(listId: number): void {
     setSelectedLists((previousLists) => {
       if (previousLists.includes(listId)) {
         return previousLists.filter((id) => id !== listId);
@@ -80,7 +81,9 @@ export default function Board() {
     }
   }
 
-
+  const onCreateTask = (name: string, description: string, listId: number) => {
+    addTask({ name, description, listId, isFinished: false });
+  };
 
   return (
     <View style={styles.boardContainer}>
@@ -118,22 +121,25 @@ export default function Board() {
               onListLongPress={onListLongPress}
             />
           )}
-          extraData={{ selectedTasks, selectedLists}}
+          extraData={{ selectedTasks, selectedLists }}
         />
       </View>
+
       <BoardToolbar onDeleteCard={handleDeleteSelectedLists} />
       {/* Modal for viewing tasks*/}
       {viewedTask && (
         <Modal
+          task={viewedTask}
           title={viewedTask.name}
           isOpen={true}
           closeModal={() => setViewedTaskId(null)}
         >
-          <Text>{viewedTask.description}</Text>
-          <CheckButton
+          <TaskDetails
+            boardLists={board_lists}
             task={viewedTask}
             onToggleTaskFinished={toggleTaskFinished}
-          />
+            onMoveTask={moveTask}
+          ></TaskDetails>
         </Modal>
       )}
     </View>

@@ -1,8 +1,7 @@
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { Pressable, Text, View } from "react-native";
 import { styles } from "./styles";
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-
 
 type BoardToolbarProps = {
   onAddCard?: () => void;
@@ -21,10 +20,14 @@ export function BoardToolbar({ onAddCard, onDeleteCard }: BoardToolbarProps) {
       <Pressable onPress={onDeleteCard} style={styles.button}>
         {trashIcon}
         <Text style={styles.buttonText}>Delete</Text>
-        </Pressable>
+      </Pressable>
     </View>
   );
 }
 
-export const bookIcon = <SimpleLineIcons name="notebook" size={24} color="black" />;
-export const trashIcon = <FontAwesome6 name="trash-can" size={24} color="black" />
+export const bookIcon = (
+  <SimpleLineIcons name="notebook" size={24} color="black" />
+);
+export const trashIcon = (
+  <FontAwesome6 name="trash-can" size={24} color="black" />
+);

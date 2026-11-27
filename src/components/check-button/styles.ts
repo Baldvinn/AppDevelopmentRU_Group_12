@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import * as colors from "../../styles/colors";
 
 export default StyleSheet.create({
   checkButton: {
@@ -15,5 +16,22 @@ export default StyleSheet.create({
     borderRadius: 12,
     borderWidth: 2,
     borderColor: "#888888",
+  },
+  withLabel: {
+    width: "auto",
+    height: "auto",
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 10,
+  },
+  labelText: {
+    fontSize: 16,
+    color: colors.mildblack,
+  },
+  labelDone: {
+    color: "#16A34A",
+    fontWeight: "600",
   },
 });

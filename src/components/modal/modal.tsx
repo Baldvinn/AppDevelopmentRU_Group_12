@@ -1,3 +1,4 @@
+import { TaskItem } from "@/types/Task";
 import { AntDesign } from "@expo/vector-icons";
 import { ReactNode } from "react";
 import { Pressable, Modal as RNModal, Text, View } from "react-native";
@@ -5,6 +6,7 @@ import * as colors from "../../styles/colors";
 import styles from "./styles";
 
 interface ModalProps {
+  task?: TaskItem;
   title: string;
   isOpen: boolean;
   closeModal: () => void;
@@ -26,7 +28,15 @@ export function Modal(props: ModalProps) {
         >
           <View style={styles.content}>
             <View style={styles.header}>
-              <Text style={styles.title}>{props.title}</Text>
+              <Text
+                key={String(props.task?.isFinished)}
+                style={[
+                  styles.title,
+                  props.task?.isFinished && styles.finishedTitle,
+                ]}
+              >
+                {props.title}
+              </Text>
               <Pressable
                 onPress={props.closeModal}
                 accessibilityLabel={"Close"}
