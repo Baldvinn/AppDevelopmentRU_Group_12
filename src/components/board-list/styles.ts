@@ -64,5 +64,11 @@ export default StyleSheet.create({
   listSelected: {
     borderWidth: 2,
     borderColor: "#007AFF",
-  }
+  },
+  noTaskMessage: {
+      textAlign: "center",
+      marginTop: 40,
+      fontSize: 16,
+      color: colors.mildblack,
+  },
 });
