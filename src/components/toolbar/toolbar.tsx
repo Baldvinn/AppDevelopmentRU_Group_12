@@ -5,16 +5,17 @@ import { styles } from "./styles";
 
 type BoardToolbarProps = {
   onAddCard?: () => void;
+  addLabel?: string;
   onDeleteCard: () => void;
 };
 
-export function BoardToolbar({ onAddCard, onDeleteCard }: BoardToolbarProps) {
+export function BoardToolbar({ onAddCard, addLabel = "Add Task",onDeleteCard }: BoardToolbarProps) {
   return (
     <View style={styles.container}>
       {onAddCard && (
         <Pressable onPress={onAddCard} style={styles.button}>
           {bookIcon}
-          <Text style={styles.buttonText}>Add Task</Text>
+          <Text style={styles.buttonText}>{addLabel}</Text>
         </Pressable>
       )}
       <Pressable onPress={onDeleteCard} style={styles.button}>
