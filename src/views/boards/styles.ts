@@ -42,5 +42,9 @@ export default StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 40,
         paddingTop: 10,
-    }
+    },
+    editButton: {
+        padding: 8,
+        marginLeft: 8,
+    },
 });
