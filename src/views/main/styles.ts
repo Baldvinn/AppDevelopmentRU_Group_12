@@ -31,8 +31,8 @@ export default StyleSheet.create({
   },
 
   image: {
-    width: "80%",
-    height: "25%",
+    width: "90%",
+    height: "45%",
     resizeMode: "contain",
   },
 });
