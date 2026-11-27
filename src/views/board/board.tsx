@@ -1,4 +1,5 @@
 import BoardList from "@/components/board-list/board-list";
+import ConfirmDelete from "@/components/confirm-delete/confirm-delete";
 import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
@@ -8,6 +9,7 @@ import { deleteList, useLists } from "@/saved/listSave";
 import {
   addTask,
   moveTask,
+  removeTask,
   toggleTaskFinished,
   updateTask,
   useTasks,
@@ -157,9 +159,24 @@ export default function Board() {
           isOpen={true}
           closeModal={closeTaskModal}
         >
-          {/* Open task editing modal, else details modal */}
-          
-          {editingTask ? (
+          {/* Confirm removing, else editing, else details */}
+          {confirmingTaskDelete ? (
+            <ConfirmDelete
+              message={
+                '"' +
+                viewedTask.name +
+                "\" will be deleted. This can't be undone."
+              }
+              onConfirm={() => {
+                removeTask(viewedTask.id);
+                setSelectedTasks((ids) =>
+                  ids.filter((id) => id !== viewedTask.id),
+                );
+                closeTaskModal();
+              }}
+              onCancel={() => setConfirmingTaskDelete(false)}
+            />
+          ) : editingTask ? (
             <TaskForm
               initialValues={viewedTask}
               submitLabel="Save changes"
