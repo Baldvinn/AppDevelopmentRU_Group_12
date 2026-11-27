@@ -23,6 +23,8 @@ interface BoardListProps {
   onTaskLongPress: (id: number) => void;
   onToggleTaskFinished: (id: number) => void;
   onCreateTask: (name: string, description: string, listId: number) => void;
+  isListSelected: boolean;
+  onListLongPress: (listId: number) => void;
 }
 
 export default function BoardList(props: BoardListProps) {
@@ -33,7 +35,7 @@ export default function BoardList(props: BoardListProps) {
   const [showAddTask, setShowAddTask] = useState(false);
 
   return (
-    <View style={[styles.listContainer, { width: columnWidth }]}>
+    <View style={[styles.listContainer, { width: columnWidth }, props.isListSelected && styles.listSelected]}>
       <View style={[styles.listHeader, { backgroundColor: headerColor }]}>
         <Pressable
           onPress={() => setShowAddTask((open) => !open)}
@@ -41,9 +43,14 @@ export default function BoardList(props: BoardListProps) {
         >
           <Ionicons name="add-circle" size={24} color={headerTextColor} />
         </Pressable>
-        <Text style={[styles.listName, { color: headerTextColor }]}>
-          {props.list.name}
-        </Text>
+        <Pressable
+        onLongPress={() => props.onListLongPress(props.list.id)}
+        style={{ flex: 1}}
+        >
+          <Text style={[styles.listName, {color: headerTextColor }]}>
+            {props.list.name}
+          </Text>
+        </Pressable>
         <Pressable
           style={styles.sideAction}
           onPress={() =>

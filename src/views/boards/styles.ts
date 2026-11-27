@@ -47,4 +47,8 @@ export default StyleSheet.create({
         padding: 8,
         marginLeft: 8,
     },
+    selectedCard: {
+        borderColor: "#007AFF",
+        borderWidth: 3, 
+    }
 });
