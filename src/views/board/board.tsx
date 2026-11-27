@@ -38,6 +38,8 @@ export default function Board() {
   // If task is being edited
   const [editingTask, setEditingTask] = useState(false);
 
+  const [confirmingTaskDelete, setConfirmingTaskDelete] = useState(false);
+
   // List id the new task is being added to (null = modal closed)
   const [addingToListId, setAddingToListId] = useState<number | null>(null);
 
@@ -87,6 +89,12 @@ export default function Board() {
     } else {
       setViewedTaskId(taskId);
     }
+  }
+
+  function closeTaskModal(): void {
+    setViewedTaskId(null);
+    setEditingTask(false);
+    setConfirmingTaskDelete(false);
   }
 
   const onCreateTask = (name: string, description: string, listId: number) => {
@@ -139,14 +147,18 @@ export default function Board() {
       {viewedTask && (
         <Modal
           task={viewedTask}
-          title={editingTask ? "Edit task" : viewedTask.name}
+          title={
+            confirmingTaskDelete
+              ? "Remove task?"
+              : editingTask
+                ? "Edit task"
+                : viewedTask.name
+          }
           isOpen={true}
-          closeModal={() => {
-            setViewedTaskId(null);
-            setEditingTask(false);
-          }}
+          closeModal={closeTaskModal}
         >
           {/* Open task editing modal, else details modal */}
+          
           {editingTask ? (
             <TaskForm
               initialValues={viewedTask}
@@ -163,6 +175,7 @@ export default function Board() {
               onToggleTaskFinished={toggleTaskFinished}
               onMoveTask={moveTask}
               onOpenEditing={() => setEditingTask(true)}
+              onRemove={() => setConfirmingTaskDelete(true)}
             />
           )}
         </Modal>
