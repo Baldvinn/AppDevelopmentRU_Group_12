@@ -1,7 +1,7 @@
 import AppButton from "@/components/appbutton/appbutton";
-import { Text, TextInput } from "react-native";
-import styles from "./styles";
 import { useState } from "react";
+import { Text, TextInput } from "react-native";
+import styles from "../styles";
 
 export interface BoardFormValues {
   name: string;
@@ -19,7 +19,7 @@ const emptyValues: BoardFormValues = {
   name: "",
   description: "",
   thumbnailPhoto: "",
-}
+};
 
 export default function BoardForm({
   initialValues = emptyValues,
@@ -28,7 +28,9 @@ export default function BoardForm({
 }: BoardFormProps) {
   const [name, setName] = useState(initialValues.name);
   const [description, setDescription] = useState(initialValues.description);
-  const [thumbnailPhoto, setThumbnailPhoto] = useState(initialValues.thumbnailPhoto);
+  const [thumbnailPhoto, setThumbnailPhoto] = useState(
+    initialValues.thumbnailPhoto,
+  );
   const [nameError, setNameError] = useState("");
   const [photoError, setPhotoError] = useState("");
 
@@ -83,8 +85,11 @@ export default function BoardForm({
       />
       {photoError !== "" && <Text style={styles.error}>{photoError}</Text>}
 
-      <AppButton label={submitLabel} marginTop={10} onPress={handleSubmit}></AppButton>
-
+      <AppButton
+        label={submitLabel}
+        marginTop={10}
+        onPress={handleSubmit}
+      ></AppButton>
     </>
   );
 }

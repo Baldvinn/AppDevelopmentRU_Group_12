@@ -11,6 +11,7 @@ import styles from "./styles";
 interface TaskDetailProps {
   boardLists: ListItem[];
   task: TaskItem;
+  onOpenEditing: () => void;
   onToggleTaskFinished: (id: number) => void;
   onMoveTask: (id: number, listId: number) => void;
 }
@@ -19,6 +20,7 @@ export default function TaskDetails(props: TaskDetailProps) {
   const currentList = props.boardLists.find(
     (list) => list.id === props.task?.listId,
   );
+
   return (
     <View style={styles.container}>
       <Text style={styles.modalLabel}>Description</Text>
@@ -33,7 +35,10 @@ export default function TaskDetails(props: TaskDetailProps) {
       />
 
       <View style={styles.modalDivider} />
+
+      {/* Dropdown menu for moving tasks */}
       <View style={styles.modalDropdownSection}>
+        <Text style={styles.modalLabel}>Move to list</Text>
         <SelectDropdown
           data={props.boardLists}
           defaultValue={currentList}
@@ -62,10 +67,17 @@ export default function TaskDetails(props: TaskDetailProps) {
           )}
         />
       </View>
+
       <View style={styles.modalDivider} />
+
+      {/*Edit or remove task*/}
       <View style={styles.editRemoveTaskButtons}>
         <View style={styles.modalButton}>
-          <AppButton label={"Edit"} onPress={() => {}} marginTop={0} />
+          <AppButton
+            label={"Edit"}
+            onPress={props.onOpenEditing}
+            marginTop={0}
+          />
         </View>
         <View style={styles.modalButton}>
           <AppButton label={"Remove"} onPress={() => {}} marginTop={0} />

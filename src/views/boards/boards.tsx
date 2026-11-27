@@ -35,9 +35,9 @@ export default function Boards() {
 
   function onBoardPress(boardId: number): void {
     if (selectedBoards.length > 0) {
-        toggleBoardSelection(boardId);
+      toggleBoardSelection(boardId);
     } else {
-        router.push({ pathname: "/board", params: { id: boardId.toString()}});
+      router.push({ pathname: "/board", params: { id: boardId.toString() } });
     }
   }
 
