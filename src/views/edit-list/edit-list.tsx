@@ -1,5 +1,5 @@
 import AppButton from "@/components/appbutton/appbutton";
-import { updateList, useLists } from "@/saved/listSave";
+import { updateList } from "@/saved/listSave";
 import {
   listBlue,
   listDarkGrey,
@@ -10,7 +10,7 @@ import {
   listRed,
   listWhite,
 } from "@/styles/colors";
-import { router, useLocalSearchParams } from "expo-router";
+import { ListItem } from "@/types/List";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import styles from "./styles";
@@ -26,20 +26,19 @@ const PRESET_COLORS = [
   listMagenta,
 ];
 
-export default function EditList() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const lists = useLists();
-  const list = lists.find((item) => item.id === Number(id));
-  const [name, setname] = useState(list?.name ?? "");
-  const [color, setcolor] = useState(list?.color ?? PRESET_COLORS[0]);
+//Receives list and onClose from board page.
+export default function EditList({
+  list,
+  onClose,
+}: {
+  list: ListItem;
+  onClose: () => void;
+}) {
+  const [name, setName] = useState(list.name);
+  const [color, setColor] = useState(list.color ?? PRESET_COLORS[0]);
   const [nameError, setNameError] = useState("");
 
-  if (!list) {
-    return <Text>List could not load, try again later.</Text>;
-  }
-
   function handleSave() {
-    if (!list) return;
     if (name.trim() === "") {
       setNameError("Name is required");
       return;
@@ -47,7 +46,7 @@ export default function EditList() {
     setNameError("");
 
     updateList(list.id, { name: name.trim(), color });
-    router.back();
+    onClose();
   }
   return (
     <View style={styles.container}>
@@ -56,7 +55,7 @@ export default function EditList() {
         style={styles.input}
         value={name}
         onChangeText={(text) => {
-          setname(text);
+          setName(text);
           setNameError("");
         }}
       />
@@ -66,7 +65,7 @@ export default function EditList() {
         {PRESET_COLORS.map((presetColor) => (
           <Pressable
             key={presetColor}
-            onPress={() => setcolor(presetColor)}
+            onPress={() => setColor(presetColor)}
             style={[
               styles.colorCircle,
               { backgroundColor: presetColor },

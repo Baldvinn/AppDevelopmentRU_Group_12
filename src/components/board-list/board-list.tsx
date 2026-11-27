@@ -2,7 +2,6 @@ import { getTextColorFor } from "@/styles/colors";
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import {
   FlatList,
   Pressable,
@@ -22,6 +21,7 @@ interface BoardListProps {
   onTaskLongPress: (id: number) => void;
   onToggleTaskFinished: (id: number) => void;
   onCreateTask: (name: string, description: string, listId: number) => void;
+  onEditPress: (listId: number) => void;
   onListLongPress: (listId: number) => void;
   onAddTaskPress: (id: number) => void;
 }
@@ -61,18 +61,14 @@ export default function BoardList(props: BoardListProps) {
         </Pressable>
         <Pressable
           style={styles.sideAction}
-          onPress={() =>
-            router.push({
-              pathname: "/edit-list",
-              params: { id: props.list.id.toString() },
-            })
-          }
+          onPress={() => props.onEditPress(props.list.id)}
         >
           <Ionicons name="pencil" size={16} color={headerTextColor} />
           <Text style={[styles.editText, { color: headerTextColor }]}>
             Edit
           </Text>
         </Pressable>
+      
       </View>
 
       <FlatList<TaskItem>

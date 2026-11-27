@@ -15,6 +15,7 @@ import {
   useTasks,
 } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
+import EditList from "@/views/edit-list/edit-list";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
@@ -36,6 +37,9 @@ export default function Board() {
 
   // Id of open task in modal
   const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
+
+  //Store which list's modal is open, null if no list is being edited
+  const [editingListId, setEditingListId] = useState<number | null>(null);
 
   // If task is being edited
   const [editingTask, setEditingTask] = useState(false);
@@ -59,6 +63,9 @@ export default function Board() {
 
   // Get the task being viewed in the modal
   const viewedTask = tasks.find((task) => task.id === viewedTaskId);
+
+  //look up the full list using the stored id so the modal always shows the current name and color
+  const editingList = lists.find((list) => list.id === editingListId);
 
   // Helper functions
   function onTaskLongPress(taskId: number): void {
@@ -135,6 +142,7 @@ export default function Board() {
               onTaskLongPress={onTaskLongPress}
               onToggleTaskFinished={toggleTaskFinished}
               onCreateTask={onCreateTask}
+              onEditPress={setEditingListId}
               isListSelected={selectedLists.includes(item.id)}
               onListLongPress={onListLongPress}
               onAddTaskPress={(listId) => setAddingToListId(listId)}
@@ -210,6 +218,15 @@ export default function Board() {
               setAddingToListId(null);
             }}
           />
+        </Modal>
+      )}
+      {editingList && (
+        <Modal
+          title="Edit list"
+          isOpen={true}
+          closeModal={() => setEditingListId(null)}
+        >
+          <EditList list={editingList} onClose={() => setEditingListId(null)} />
         </Modal>
       )}
     </View>
