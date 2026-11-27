@@ -1,11 +1,12 @@
 import BoardList from "@/components/board-list/board-list";
 import ConfirmDelete from "@/components/confirm-delete/confirm-delete";
+import ListForm from "@/components/forms/list-form/list-form";
 import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
 import { BoardToolbar } from "@/components/toolbar/toolbar";
 import { useBoards } from "@/saved/boardSave";
-import { deleteList, useLists } from "@/saved/listSave";
+import { addList, deleteList, useLists } from "@/saved/listSave";
 import {
   addTask,
   moveTask,
@@ -48,6 +49,9 @@ export default function Board() {
 
   // List id the new task is being added to (null = modal closed)
   const [addingToListId, setAddingToListId] = useState<number | null>(null);
+
+  // If the create list is open
+  const [creatingList, setCreatingList] = useState(false);
 
   const [confirmingListDelete, setConfirmingListDelete] = useState(false);
 
@@ -159,18 +163,21 @@ export default function Board() {
           extraData={{ selectedTasks, selectedLists }}
         />
       </View>
-
-      <BoardToolbar onDeleteCard={requestDeleteSelectedLists} />
+      <BoardToolbar
+        onAddCard={() => setCreatingList(true)}
+        addLabel="Add list"
+        onDeleteCard={requestDeleteSelectedLists}
+      />
       {confirmingListDelete && (
         <Modal
-        title="Delete lists?"
-        isOpen={confirmingListDelete}
-        closeModal={() => setConfirmingListDelete(false)}
+          title="Delete lists?"
+          isOpen={confirmingListDelete}
+          closeModal={() => setConfirmingListDelete(false)}
         >
           <ConfirmDelete
-          message={`${selectedLists.length} list(s) and their tasks will be deleted. This can't be undone.`}
-          onConfirm={handleDeleteSelectedLists}
-          onCancel={() => setConfirmingListDelete(false)}
+            message={`${selectedLists.length} list(s) and their tasks will be deleted. This can't be undone.`}
+            onConfirm={handleDeleteSelectedLists}
+            onCancel={() => setConfirmingListDelete(false)}
           />
         </Modal>
       )}
@@ -248,6 +255,21 @@ export default function Board() {
           closeModal={() => setEditingListId(null)}
         >
           <EditList list={editingList} onClose={() => setEditingListId(null)} />
+        </Modal>
+      )}
+      {creatingList && (
+        <Modal
+          title="Create new list"
+          isOpen={true}
+          closeModal={() => setCreatingList(false)}
+        >
+          <ListForm
+            submitLabel="Create list"
+            onSubmit={(values) => {
+              addList({ ...values, boardId: board.id });
+              setCreatingList(false);
+            }}
+          />
         </Modal>
       )}
     </View>
