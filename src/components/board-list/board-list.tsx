@@ -68,7 +68,6 @@ export default function BoardList(props: BoardListProps) {
             Edit
           </Text>
         </Pressable>
-      
       </View>
 
       <FlatList<TaskItem>
@@ -76,6 +75,9 @@ export default function BoardList(props: BoardListProps) {
         contentContainerStyle={styles.listContent}
         data={props.tasks}
         keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={
+          <Text style={styles.noTaskMessage}>This list has no tasks yet</Text>
+        }
         renderItem={({ item }) => (
           <ListTask
             task={item}

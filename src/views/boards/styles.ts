@@ -50,5 +50,11 @@ export default StyleSheet.create({
     selectedCard: {
         borderColor: "#007AFF",
         borderWidth: 3, 
+    },
+    noBoardsMessage: {
+        textAlign: "center",
+        marginTop: 40,
+        fontSize: 16,
+        color: mildblack,
     }
 });
