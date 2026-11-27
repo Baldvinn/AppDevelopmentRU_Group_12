@@ -3,7 +3,15 @@ import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
+import { useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import AddTask from "../add-task/add-task";
 import ListTask from "../list-task/list-task";
 import styles from "./styles";
 
@@ -14,6 +22,9 @@ interface BoardListProps {
   onTaskPress: (id: number) => void;
   onTaskLongPress: (id: number) => void;
   onToggleTaskFinished: (id: number) => void;
+  onCreateTask: (name: string, description: string, listId: number) => void;
+  isListSelected: boolean;
+  onListLongPress: (listId: number) => void;
 }
 
 export default function BoardList(props: BoardListProps) {
@@ -21,29 +32,52 @@ export default function BoardList(props: BoardListProps) {
   const columnWidth = Math.min(280, width - 48);
   const headerColor = props.list.color || "#D4EAFB";
   const headerTextColor = getTextColorFor(headerColor);
+  const [showAddTask, setShowAddTask] = useState(false);
 
   const completed = props.tasks.filter((task) => task.isFinished === true);
   const incomplete = props.tasks.filter((task) => task.isFinished === false);
 
   return (
-    <View style={[styles.listContainer, { width: columnWidth }]}>
+    <View style={[styles.listContainer, { width: columnWidth }, props.isListSelected && styles.listSelected]}>
       <View style={[styles.listHeader, { backgroundColor: headerColor }]}>
-        <Text style={[styles.listName, { color: headerTextColor }]}>
-          {props.list.name}
-        </Text>
         <Pressable
+          onPress={() => setShowAddTask((open) => !open)}
+          style={styles.sideAction}
+        >
+          <Ionicons name="add-circle" size={24} color={headerTextColor} />
+        </Pressable>
+        <Pressable
+        onLongPress={() => props.onListLongPress(props.list.id)}
+        style={{ flex: 1}}
+        >
+          <Text style={[styles.listName, {color: headerTextColor }]}>
+            {props.list.name}
+          </Text>
+        </Pressable>
+        <Pressable
+          style={styles.sideAction}
           onPress={() =>
             router.push({
               pathname: "/edit-list",
               params: { id: props.list.id.toString() },
             })
           }
-          style={styles.editButton}
         >
           <Ionicons name="pencil" size={16} color={headerTextColor} />
-          <Text style={[styles.editText, { color: headerTextColor }]}>Edit</Text>
+          <Text style={[styles.editText, { color: headerTextColor }]}>
+            Edit
+          </Text>
         </Pressable>
       </View>
+
+      {showAddTask && (
+        <AddTask
+          onAddTask={(name, description) => {
+            props.onCreateTask(name, description, props.list.id);
+            setShowAddTask(false);
+          }}
+        />
+      )}
 
       <FlatList<TaskItem>
         style={styles.taskList}

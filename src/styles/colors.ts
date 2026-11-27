@@ -45,4 +45,3 @@ export function getTextColorFor(background: string): string {
 
   return brightness >= 128 ? mildblack : "#ffffff";
 }
-

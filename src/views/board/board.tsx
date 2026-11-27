@@ -1,8 +1,9 @@
 import BoardList from "@/components/board-list/board-list";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
+import { BoardToolbar } from "@/components/toolbar/toolbar";
 import { useBoards } from "@/saved/boardSave";
-import { useLists } from "@/saved/listSave";
+import { deleteList, useLists } from "@/saved/listSave";
 import {
   addTask,
   moveTask,
@@ -26,7 +27,10 @@ export default function Board() {
   // All selected tasks
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
 
-  // The id of an open task in modal
+  // All selected lists
+  const [selectedLists, setSelectedLists] = useState<number[]>([]);
+
+  // Id of open task in modal
   const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
 
   // Find the appropriate board
@@ -55,6 +59,20 @@ export default function Board() {
     });
   }
 
+  function onListLongPress(listId: number): void {
+    setSelectedLists((previousLists) => {
+      if (previousLists.includes(listId)) {
+        return previousLists.filter((id) => id !== listId);
+      }
+      return [...previousLists, listId];
+    });
+  }
+
+  function handleDeleteSelectedLists(): void {
+    selectedLists.forEach(deleteList);
+    setSelectedLists([]);
+  }
+
   function onTaskPress(taskId: number): void {
     if (selectedTasks.length > 0) {
       onTaskLongPress(taskId);
@@ -69,6 +87,7 @@ export default function Board() {
 
   return (
     <View style={styles.boardContainer}>
+      {/* Board header */}
       <View style={styles.boardHeader}>
         <Image
           source={{ uri: board.thumbnailPhoto }}
@@ -82,6 +101,7 @@ export default function Board() {
         </View>
       </View>
 
+      {/* Contents of a board */}
       <View style={styles.boardContents}>
         <FlatList<ListItem>
           horizontal
@@ -96,13 +116,17 @@ export default function Board() {
               onTaskPress={onTaskPress}
               onTaskLongPress={onTaskLongPress}
               onToggleTaskFinished={toggleTaskFinished}
+              onCreateTask={onCreateTask}
+              isListSelected={selectedLists.includes(item.id)}
+              onListLongPress={onListLongPress}
             />
           )}
-          extraData={{ selectedTasks }}
+          extraData={{ selectedTasks, selectedLists }}
         />
       </View>
 
-      {/* Modal for viewing task details*/}
+      <BoardToolbar onDeleteCard={handleDeleteSelectedLists} />
+      {/* Modal for viewing tasks*/}
       {viewedTask && (
         <Modal
           task={viewedTask}

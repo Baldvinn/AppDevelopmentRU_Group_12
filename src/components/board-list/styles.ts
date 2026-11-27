@@ -21,8 +21,9 @@ export default StyleSheet.create({
     padding: 14,
     backgroundColor: "#D4EAFB",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
+    minHeight: 48,
   },
 
   listContent: {
@@ -30,6 +31,9 @@ export default StyleSheet.create({
   },
 
   listName: {
+    flex: 1,
+    flexShrink:1, 
+    textAlign: "center",
     ...headings.h3,
     color: colors.mildblack,
   },
@@ -41,6 +45,7 @@ export default StyleSheet.create({
   editButton: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     gap: 4,
     marginLeft: 8,
     padding: 6,
@@ -50,4 +55,14 @@ export default StyleSheet.create({
     fontSize: 14,
     color: "#1A1A1A",
   },
+  sideAction: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  listSelected: {
+    borderWidth: 2,
+    borderColor: "#007AFF",
+  }
 });
