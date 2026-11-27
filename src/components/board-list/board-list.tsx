@@ -22,6 +22,9 @@ export default function BoardList(props: BoardListProps) {
   const headerColor = props.list.color || "#D4EAFB";
   const headerTextColor = getTextColorFor(headerColor);
 
+  const completed = props.tasks.filter((task) => task.isFinished === true);
+  const incomplete = props.tasks.filter((task) => task.isFinished === false);
+
   return (
     <View style={[styles.listContainer, { width: columnWidth }]}>
       <View style={[styles.listHeader, { backgroundColor: headerColor }]}>

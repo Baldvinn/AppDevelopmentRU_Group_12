@@ -30,4 +30,10 @@ export default StyleSheet.create({
     flex: 1,
     textAlign: "center",
   },
+
+  finishedTitle: {
+    color: "#16A34A",
+    textDecorationLine: "line-through",
+    textDecorationColor: "#16A34A",
+  },
 });

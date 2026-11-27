@@ -1,6 +1,6 @@
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { Pressable, Text, View } from "react-native";
 import { styles } from "./styles";
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
 type BoardToolbarProps = {
   onAddCard: () => void;
@@ -17,4 +17,6 @@ export function BoardToolbar({ onAddCard }: BoardToolbarProps) {
   );
 }
 
-export const bookIcon = <SimpleLineIcons name="notebook" size={24} color="black" />;
+export const bookIcon = (
+  <SimpleLineIcons name="notebook" size={24} color="black" />
+);

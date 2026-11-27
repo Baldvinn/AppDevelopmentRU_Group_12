@@ -1,9 +1,14 @@
 import BoardList from "@/components/board-list/board-list";
-import CheckButton from "@/components/check-button/check-button";
-import { Modal } from "@/components/modal/task-modal";
+import { Modal } from "@/components/modal/modal";
+import TaskDetails from "@/components/task-details/task-details";
 import { useBoards } from "@/saved/boardSave";
 import { useLists } from "@/saved/listSave";
-import { toggleTaskFinished, useTasks } from "@/saved/taskSave";
+import {
+  addTask,
+  moveTask,
+  toggleTaskFinished,
+  useTasks,
+} from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -21,6 +26,7 @@ export default function Board() {
   // All selected tasks
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
 
+  // The id of an open task in modal
   const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
 
   // Find the appropriate board
@@ -35,6 +41,7 @@ export default function Board() {
     (list) => list.boardId === board.id,
   );
 
+  // Get the task being viewed in the modal
   const viewedTask = tasks.find((task) => task.id === viewedTaskId);
 
   // Helper functions
@@ -55,6 +62,10 @@ export default function Board() {
       setViewedTaskId(taskId);
     }
   }
+
+  const onCreateTask = (name: string, description: string, listId: number) => {
+    addTask({ name, description, listId, isFinished: false });
+  };
 
   return (
     <View style={styles.boardContainer}>
@@ -90,17 +101,21 @@ export default function Board() {
           extraData={{ selectedTasks }}
         />
       </View>
+
+      {/* Modal for viewing task details*/}
       {viewedTask && (
         <Modal
+          task={viewedTask}
           title={viewedTask.name}
           isOpen={true}
           closeModal={() => setViewedTaskId(null)}
         >
-          <Text>{viewedTask.description}</Text>
-          <CheckButton
+          <TaskDetails
+            boardLists={board_lists}
             task={viewedTask}
             onToggleTaskFinished={toggleTaskFinished}
-          />
+            onMoveTask={moveTask}
+          ></TaskDetails>
         </Modal>
       )}
     </View>
