@@ -1,5 +1,5 @@
 import AppButton from "@/components/appbutton/appbutton";
-import BoardForm from "@/components/board-form/board-form";
+import BoardForm from "@/components/forms/board-form/board-form";
 import ConfirmDelete from "@/components/confirm-delete/confirm-delete";
 import { Modal } from "@/components/modal/modal";
 import { BoardToolbar } from "@/components/toolbar/toolbar";

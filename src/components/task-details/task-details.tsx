@@ -2,7 +2,7 @@ import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { AntDesign } from "@expo/vector-icons";
 import { Text, View } from "react-native";
-import SelectDropdown from "react-native-select-dropdown";
+import SelectDropdown from "react-native-select-dropdown"
 import * as colors from "../../styles/colors";
 import AppButton from "../appbutton/appbutton";
 import CheckButton from "../check-button/check-button";
