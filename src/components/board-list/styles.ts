@@ -61,4 +61,8 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  listSelected: {
+    borderWidth: 2,
+    borderColor: "#007AFF",
+  }
 });

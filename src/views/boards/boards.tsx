@@ -9,11 +9,27 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import styles from "./styles";
+import { BoardToolbar } from "@/components/toolbar/toolbar";
+import { deleteBoard } from "@/saved/boardSave"; 
 
 export default function Boards() {
   const [createBoardVisible, setCreateBoardVisible] = useState(false);
   const [editingBoard, setEditingBoard] = useState<BoardItem | null>(null);
+  const [selectedBoards, setSelectedBoards ] = useState<number[]>([]);
   const boards = useBoards();
+
+function toggleBoardSelection(boardId: number): void {
+  setSelectedBoards((previousBoards) =>
+    previousBoards.includes(boardId)
+      ? previousBoards.filter((id) => id !== boardId)
+      : [...previousBoards, boardId],
+  );
+  }
+
+  function handleDeleteSelectedBoards(): void {
+    selectedBoards.forEach(deleteBoard);
+    setSelectedBoards([]);
+  }
   return (
     <View style={styles.screen}>
       <FlatList
@@ -24,7 +40,9 @@ export default function Boards() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <Pressable
-            style={styles.card}
+            style={[styles.card, selectedBoards.includes(item.id) && styles.selectedCard,]}
+            onLongPress={() =>
+              toggleBoardSelection(item.id)}
             onPress={() =>
               router.push({
                 pathname: "/board",
@@ -58,7 +76,7 @@ export default function Boards() {
           onPress={() => setCreateBoardVisible(true)}
         />
       </View>
-
+      <BoardToolbar onDeleteCard={handleDeleteSelectedBoards} />
       <Modal
         title="Create new board"
         isOpen={createBoardVisible}
@@ -91,5 +109,6 @@ export default function Boards() {
         )}
       </Modal>
     </View>
+    
   );
 }

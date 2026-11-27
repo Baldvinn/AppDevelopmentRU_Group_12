@@ -9,6 +9,8 @@ import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import styles from "./styles";
+import { BoardToolbar } from "@/components/toolbar/toolbar";
+import { deleteList } from "@/saved/listSave";
 
 export default function Board() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,6 +22,9 @@ export default function Board() {
 
   // All selected tasks
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
+
+  // All selected lists
+  const [selectedLists, setSelectedLists] = useState<number[]>([]);
 
   // Id of open task in modal
   const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
@@ -53,6 +58,20 @@ export default function Board() {
     });
   }
 
+  function onListLongPress (listId: number):void {
+    setSelectedLists((previousLists) => {
+      if (previousLists.includes(listId)) {
+        return previousLists.filter((id) => id !== listId);
+      }
+      return [...previousLists, listId];
+    });
+  }
+
+  function handleDeleteSelectedLists(): void {
+    selectedLists.forEach(deleteList);
+    setSelectedLists([]);
+  }
+
   function onTaskPress(taskId: number): void {
     if (selectedTasks.length > 0) {
       onTaskLongPress(taskId);
@@ -60,6 +79,8 @@ export default function Board() {
       setViewedTaskId(taskId);
     }
   }
+
+
 
   return (
     <View style={styles.boardContainer}>
@@ -93,12 +114,14 @@ export default function Board() {
               onTaskLongPress={onTaskLongPress}
               onToggleTaskFinished={toggleTaskFinished}
               onCreateTask={onCreateTask}
+              isListSelected={selectedLists.includes(item.id)}
+              onListLongPress={onListLongPress}
             />
           )}
-          extraData={{ selectedTasks }}
+          extraData={{ selectedTasks, selectedLists}}
         />
       </View>
-
+      <BoardToolbar onDeleteCard={handleDeleteSelectedLists} />
       {/* Modal for viewing tasks*/}
       {viewedTask && (
         <Modal
