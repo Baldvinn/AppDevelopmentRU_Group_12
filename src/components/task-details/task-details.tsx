@@ -14,6 +14,7 @@ interface TaskDetailProps {
   onOpenEditing: () => void;
   onToggleTaskFinished: (id: number) => void;
   onMoveTask: (id: number, listId: number) => void;
+  onRemove: () => void;
 }
 
 export default function TaskDetails(props: TaskDetailProps) {
@@ -80,7 +81,7 @@ export default function TaskDetails(props: TaskDetailProps) {
           />
         </View>
         <View style={styles.modalButton}>
-          <AppButton label={"Remove"} onPress={() => {}} marginTop={0} />
+          <AppButton label={"Remove"} onPress={(props.onRemove)} marginTop={0} />
         </View>
       </View>
     </View>

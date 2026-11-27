@@ -1,4 +1,5 @@
 import BoardList from "@/components/board-list/board-list";
+import ConfirmDelete from "@/components/confirm-delete/confirm-delete";
 import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
@@ -8,6 +9,7 @@ import { deleteList, useLists } from "@/saved/listSave";
 import {
   addTask,
   moveTask,
+  removeTask,
   toggleTaskFinished,
   updateTask,
   useTasks,
@@ -41,6 +43,8 @@ export default function Board() {
 
   // If task is being edited
   const [editingTask, setEditingTask] = useState(false);
+
+  const [confirmingTaskDelete, setConfirmingTaskDelete] = useState(false);
 
   // List id the new task is being added to (null = modal closed)
   const [addingToListId, setAddingToListId] = useState<number | null>(null);
@@ -96,6 +100,12 @@ export default function Board() {
     }
   }
 
+  function closeTaskModal(): void {
+    setViewedTaskId(null);
+    setEditingTask(false);
+    setConfirmingTaskDelete(false);
+  }
+
   const onCreateTask = (name: string, description: string, listId: number) => {
     addTask({ name, description, listId, isFinished: false });
   };
@@ -147,15 +157,34 @@ export default function Board() {
       {viewedTask && (
         <Modal
           task={viewedTask}
-          title={editingTask ? "Edit task" : viewedTask.name}
+          title={
+            confirmingTaskDelete
+              ? "Remove task?"
+              : editingTask
+                ? "Edit task"
+                : viewedTask.name
+          }
           isOpen={true}
-          closeModal={() => {
-            setViewedTaskId(null);
-            setEditingTask(false);
-          }}
+          closeModal={closeTaskModal}
         >
-          {/* Open task editing modal, else details modal */}
-          {editingTask ? (
+          {/* Confirm removing, else editing, else details */}
+          {confirmingTaskDelete ? (
+            <ConfirmDelete
+              message={
+                '"' +
+                viewedTask.name +
+                "\" will be deleted. This can't be undone."
+              }
+              onConfirm={() => {
+                removeTask(viewedTask.id);
+                setSelectedTasks((ids) =>
+                  ids.filter((id) => id !== viewedTask.id),
+                );
+                closeTaskModal();
+              }}
+              onCancel={() => setConfirmingTaskDelete(false)}
+            />
+          ) : editingTask ? (
             <TaskForm
               initialValues={viewedTask}
               submitLabel="Save changes"
@@ -171,6 +200,7 @@ export default function Board() {
               onToggleTaskFinished={toggleTaskFinished}
               onMoveTask={moveTask}
               onOpenEditing={() => setEditingTask(true)}
+              onRemove={() => setConfirmingTaskDelete(true)}
             />
           )}
         </Modal>
