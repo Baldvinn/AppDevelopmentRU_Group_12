@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import ListTask from "../list-task/list-task";
+import ProgressBar from "../progress-bar/progress-bar";
 import styles from "./styles";
 
 interface BoardListProps {
@@ -70,6 +71,10 @@ export default function BoardList(props: BoardListProps) {
           </Text>
         </Pressable>
       </View>
+      <ProgressBar
+        completed={completed.length}
+        total={completed.length + incomplete.length}
+      ></ProgressBar>
 
       <FlatList<TaskItem>
         style={styles.taskList}
