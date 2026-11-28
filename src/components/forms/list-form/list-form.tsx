@@ -26,7 +26,7 @@ const PRESET_COLORS = [
 
 export interface ListFormValues {
   name: string;
-  color?: string;
+  color: string;
 }
 
 interface ListFormProps {

@@ -5,9 +5,8 @@ import ListForm from "@/components/forms/list-form/list-form";
 import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
-import { BoardToolbar } from "@/components/toolbar/toolbar";
 import TaskFilter from "@/components/task-filter/task-filter";
-import { TaskFilter as Filter } from "@/types/TaskFilter";
+import { BoardToolbar } from "@/components/toolbar/toolbar";
 import { useSelection } from "@/hooks/useSelection";
 import { useBoards } from "@/saved/boardSave";
 import { addList, deleteList, useLists } from "@/saved/listSave";
@@ -20,6 +19,7 @@ import {
   useTasks,
 } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
+import { TaskFilter as Filter } from "@/types/TaskFilter";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
@@ -53,7 +53,8 @@ export default function Board() {
   // If the create list is open
   const [creatingList, setCreatingList] = useState(false);
 
-  const [confirmingListDelete, setConfirmingListDelete] = useState(false);
+  const [confirmingSelectedDelete, setConfirmingSelectedDelete] =
+    useState(false);
 
   // Wich tasks to show in every list
   const [filter, setFilter] = useState<Filter>("all");
@@ -76,17 +77,35 @@ export default function Board() {
   //look up the full list using the stored id so the modal always shows the current name and color
   const editingList = lists.find((list) => list.id === editingListId);
 
-  // Helper functions
+  // e.g. "2 list(s) and their tasks and 3 task(s) will be deleted..."
+  const deleteParts: string[] = [];
+  if (listSelection.selected.length > 0) {
+    deleteParts.push(
+      `${listSelection.selected.length} list(s) and their tasks`,
+    );
+  }
+  if (taskSelection.selected.length > 0) {
+    deleteParts.push(`${taskSelection.selected.length} task(s)`);
+  }
+  const deleteMessage =
+    deleteParts.join(" and ") + " will be deleted. This can't be undone.";
 
-  function handleDeleteSelectedLists(): void {
+  // True if any lists or tasks are selected
+  const hasSelection =
+    listSelection.selected.length > 0 || taskSelection.selected.length > 0;
+
+  // Helper functions
+  function handleDeleteSelected(): void {
+    taskSelection.selected.forEach(removeTask);
     listSelection.selected.forEach(deleteList);
+    taskSelection.clear();
     listSelection.clear();
-    setConfirmingListDelete(false);
+    setConfirmingSelectedDelete(false);
   }
 
-  function requestDeleteSelectedLists(): void {
-    if (listSelection.selected.length === 0) return;
-    setConfirmingListDelete(true);
+  function requestDeleteSelected(): void {
+    if (!hasSelection) return;
+    setConfirmingSelectedDelete(true);
   }
 
   function onTaskPress(taskId: number): void {
@@ -125,7 +144,13 @@ export default function Board() {
         </View>
       </View>
 
-      <TaskFilter value={filter} onChange={setFilter}></TaskFilter>
+      <TaskFilter
+        value={filter}
+        onChange={(value) => {
+          setFilter(value);
+          taskSelection.clear();
+        }}
+      />
 
       {/* Contents of a board */}
       <View style={styles.boardContents}>
@@ -136,7 +161,7 @@ export default function Board() {
           keyExtractor={(item) => item.id.toString()}
           ListEmptyComponent={
             <Text style={styles.noListsMessage}>
-            You have no lists, feel free to create one.
+              You have no lists, feel free to create one.
             </Text>
           }
           renderItem={({ item }) => (
@@ -166,21 +191,21 @@ export default function Board() {
       <BoardToolbar
         onAddCard={() => setCreatingList(true)}
         addLabel="Add list"
-        onDeleteCard={requestDeleteSelectedLists}
-        deleteDisabled={listSelection.selected.length === 0}
+        onDeleteCard={requestDeleteSelected}
+        deleteDisabled={!hasSelection}
       />
 
-      {/* Modal for confirming list removal */}
-      {confirmingListDelete && (
+      {/* Modal for confirming removal of selected items */}
+      {confirmingSelectedDelete && (
         <Modal
-          title="Delete lists?"
-          isOpen={confirmingListDelete}
-          closeModal={() => setConfirmingListDelete(false)}
+          title="Delete selected?"
+          isOpen={confirmingSelectedDelete}
+          closeModal={() => setConfirmingSelectedDelete(false)}
         >
           <ConfirmDelete
-            message={`${listSelection.selected.length} list(s) and their tasks will be deleted. This can't be undone.`}
-            onConfirm={handleDeleteSelectedLists}
-            onCancel={() => setConfirmingListDelete(false)}
+            message={deleteMessage}
+            onConfirm={handleDeleteSelected}
+            onCancel={() => setConfirmingSelectedDelete(false)}
           />
         </Modal>
       )}

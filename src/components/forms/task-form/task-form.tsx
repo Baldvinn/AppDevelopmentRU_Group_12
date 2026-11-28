@@ -27,11 +27,14 @@ export default function TaskForm({
   const [name, setName] = useState(initialValues.name);
   const [description, setDescription] = useState(initialValues.description);
   const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
 
   function handleSubmit() {
     const nameMissing = name.trim() === "";
+    const descriptionMissing = description.trim() === "";
     setNameError(nameMissing ? "Name is required" : "");
-    if (nameMissing) return;
+    setDescriptionError(descriptionMissing ? "Description is required" : "");
+    if (nameMissing || descriptionMissing) return;
 
     onSubmit({
       name: name.trim(),
@@ -60,8 +63,14 @@ export default function TaskForm({
         placeholder="Enter a description"
         placeholderTextColor="grey"
         value={description}
-        onChangeText={setDescription}
+        onChangeText={(text) => {
+          setDescription(text);
+          setDescriptionError("");
+        }}
       />
+      {descriptionError !== "" && (
+        <Text style={styles.error}>{descriptionError}</Text>
+      )}
 
       <AppButton
         label={submitLabel}
