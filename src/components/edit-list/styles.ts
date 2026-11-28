@@ -40,4 +40,13 @@ export default StyleSheet.create({
     borderWidth: 3,
     borderColor: mildblack,
   },
+
+  modalLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    opacity: 0.6,
+    marginTop: 10,
+  },
 });

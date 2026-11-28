@@ -1,11 +1,9 @@
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
-import { AntDesign } from "@expo/vector-icons";
 import { Text, View } from "react-native";
-import SelectDropdown from "react-native-select-dropdown"
-import * as colors from "../../styles/colors";
 import AppButton from "../appbutton/appbutton";
 import CheckButton from "../check-button/check-button";
+import DropdownButton from "../dropdown-button/dropdown-button";
 import styles from "./styles";
 
 interface TaskDetailProps {
@@ -38,36 +36,13 @@ export default function TaskDetails(props: TaskDetailProps) {
       <View style={styles.modalDivider} />
 
       {/* Dropdown menu for moving tasks */}
-      <View style={styles.modalDropdownSection}>
-        <Text style={styles.modalLabel}>Move to list</Text>
-        <SelectDropdown
-          data={props.boardLists}
-          defaultValue={currentList}
-          onSelect={(selectedList: ListItem) =>
-            props.onMoveTask(props.task.id, selectedList.id)
-          }
-          renderButton={(selectedList: ListItem | null, isOpened: boolean) => (
-            <View style={styles.dropdownButton}>
-              <Text>{selectedList?.name ?? "Choose a list"}</Text>
-              <AntDesign
-                name={isOpened ? "up" : "down"}
-                size={14}
-                color={colors.mildblack}
-              />
-            </View>
-          )}
-          renderItem={(list: ListItem, index: number, isSelected: boolean) => (
-            <View
-              style={[
-                styles.dropdownItem,
-                isSelected && styles.dropdownItemSelected,
-              ]}
-            >
-              <Text>{list.name}</Text>
-            </View>
-          )}
-        />
-      </View>
+      <Text style={styles.modalLabel}>Move to List</Text>
+      <DropdownButton
+        data={props.boardLists}
+        currentParent={currentList}
+        placeholder="Choose a list"
+        onSelect={(listId) => props.onMoveTask(props.task.id, listId)}
+      />
 
       <View style={styles.modalDivider} />
 
@@ -81,7 +56,7 @@ export default function TaskDetails(props: TaskDetailProps) {
           />
         </View>
         <View style={styles.modalButton}>
-          <AppButton label={"Remove"} onPress={(props.onRemove)} marginTop={0} />
+          <AppButton label={"Remove"} onPress={props.onRemove} marginTop={0} />
         </View>
       </View>
     </View>
