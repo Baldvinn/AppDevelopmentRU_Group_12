@@ -1,5 +1,6 @@
 import AppButton from "@/components/appbutton/appbutton";
-import { updateList } from "@/saved/listSave";
+import { useBoards } from "@/saved/boardSave";
+import { moveList, updateList } from "@/saved/listSave";
 import {
   listBlue,
   listDarkGrey,
@@ -10,9 +11,11 @@ import {
   listRed,
   listWhite,
 } from "@/styles/colors";
+import { BoardItem } from "@/types/Board";
 import { ListItem } from "@/types/List";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import DropdownButton from "../dropdown-button/dropdown-button";
 import styles from "./styles";
 
 const PRESET_COLORS = [
@@ -30,13 +33,20 @@ const PRESET_COLORS = [
 export default function EditList({
   list,
   onClose,
+  currentBoard,
 }: {
   list: ListItem;
   onClose: () => void;
+  currentBoard: BoardItem;
 }) {
   const [name, setName] = useState(list.name);
   const [color, setColor] = useState(list.color ?? PRESET_COLORS[0]);
   const [nameError, setNameError] = useState("");
+
+  // The board the list will be moved to when Save is pressed
+  const [boardId, setBoardId] = useState(currentBoard.id);
+
+  const boards = useBoards();
 
   function handleSave() {
     if (name.trim() === "") {
@@ -46,6 +56,7 @@ export default function EditList({
     setNameError("");
 
     updateList(list.id, { name: name.trim(), color });
+    moveList(list.id, boardId);
     onClose();
   }
   return (
@@ -74,6 +85,14 @@ export default function EditList({
           />
         ))}
       </View>
+
+      <Text style={styles.modalLabel}>Move to Board</Text>
+      <DropdownButton
+        data={boards}
+        currentParent={currentBoard}
+        placeholder="Choose a board"
+        onSelect={setBoardId}
+      />
       <AppButton label="Save" onPress={handleSave} />
     </View>
   );

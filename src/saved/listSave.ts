@@ -13,3 +13,7 @@ export function deleteList(id: number) {
   taskSave.removeWhere((task) => task.listId === id);
   listSave.remove(id);
 }
+
+export function moveList(id: number, newBoardId: number) {
+  listSave.update(id, { boardId: newBoardId });
+}

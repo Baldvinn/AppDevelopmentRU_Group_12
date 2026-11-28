@@ -250,7 +250,11 @@ export default function Board() {
           isOpen={true}
           closeModal={() => setEditingListId(null)}
         >
-          <EditList list={editingList} onClose={() => setEditingListId(null)} />
+          <EditList
+            list={editingList}
+            onClose={() => setEditingListId(null)}
+            currentBoard={board}
+          />
         </Modal>
       )}
 
