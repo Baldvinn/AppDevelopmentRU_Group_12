@@ -31,7 +31,7 @@ export default function RootLayout() {
           ),
         }}
       >
-        <Stack.Screen name="index" />
+        <Stack.Screen name="index" options={{ headerTitle: "Main menu" }} />
         <Stack.Screen name="boards" />
         <Stack.Screen name="board" />
       </Stack>
