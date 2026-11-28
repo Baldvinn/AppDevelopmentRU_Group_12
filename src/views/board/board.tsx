@@ -127,6 +127,11 @@ export default function Board() {
           style={{ flex: 1 }}
           data={board_lists}
           keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.noListsMessage}>
+            You have no lists, feel free to create one.
+            </Text>
+          }
           renderItem={({ item }) => (
             <BoardList
               list={item}
