@@ -153,6 +153,7 @@ export default function Board() {
         onAddCard={() => setCreatingList(true)}
         addLabel="Add list"
         onDeleteCard={requestDeleteSelectedLists}
+        deleteDisabled={listSelection.selected.length === 0}
       />
 
       {/* Modal for confirming list removal */}

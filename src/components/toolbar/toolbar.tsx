@@ -8,6 +8,7 @@ type BoardToolbarProps = {
   addLabel?: string;
   onDeleteCard: () => void;
   style?: StyleProp<ViewStyle>;
+  deleteDisabled: boolean;
 };
 
 export function BoardToolbar({
@@ -15,6 +16,7 @@ export function BoardToolbar({
   addLabel = "Add Task",
   onDeleteCard,
   style,
+  deleteDisabled
 }: BoardToolbarProps) {
   return (
     <View style={[styles.container, style]}>
@@ -24,7 +26,9 @@ export function BoardToolbar({
           <Text style={styles.buttonText}>{addLabel}</Text>
         </Pressable>
       )}
-      <Pressable onPress={onDeleteCard} style={styles.button}>
+      <Pressable onPress={onDeleteCard} 
+      disabled={deleteDisabled}
+      style={[styles.button, deleteDisabled && { opacity: 0.35}]}>
         {trashIcon}
         <Text style={styles.buttonText}>Delete</Text>
       </Pressable>

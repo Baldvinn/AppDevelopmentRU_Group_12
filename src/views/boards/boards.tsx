@@ -98,6 +98,7 @@ export default function Boards() {
         <BoardToolbar
           style={{ alignSelf: "flex-start" }}
           onDeleteCard={requestDeleteSelectedBoards}
+          deleteDisabled={boardsSelection.selected.length === 0}
         />
         <AppButton
           label="Create new board"
