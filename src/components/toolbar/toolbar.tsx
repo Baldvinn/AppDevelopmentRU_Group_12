@@ -1,17 +1,23 @@
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
 import { styles } from "./styles";
 
 type BoardToolbarProps = {
   onAddCard?: () => void;
   addLabel?: string;
   onDeleteCard: () => void;
+  style?: StyleProp<ViewStyle>;
 };
 
-export function BoardToolbar({ onAddCard, addLabel = "Add Task",onDeleteCard }: BoardToolbarProps) {
+export function BoardToolbar({
+  onAddCard,
+  addLabel = "Add Task",
+  onDeleteCard,
+  style,
+}: BoardToolbarProps) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {onAddCard && (
         <Pressable onPress={onAddCard} style={styles.button}>
           {bookIcon}
