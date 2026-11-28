@@ -28,16 +28,19 @@ A virtual Kanban board mobile application for task organization, built with Reac
 Each view is broken up into components following the Single Responsibility Principle. Reusable components live in "src/components", the screens in "src/views", and shared data logic in "src/saved" and "src/hooks".
 
 ### Main Menu
+
 ![Main menu component graph](assets/component-graphs/Frame%201.png)
 
 "Main" shows the toodler logo, a welcome message and a button that navigates to the Boards screen.
 
 ### Boards
+
 ![Boards component graph](assets/component-graphs/Frame%202.png)
 
-"Boards" lists every board in a "Flatlist".  Boards are created and edited through a reusable "Modal" containing "BoardForm", and deletion is confirmed with "ConfirmDelete".  "BoardToolbar" deletes selected boards, and "AppButton" opens the create form.
+"Boards are created and edited through CreateBoardModal and EditBoardModal, which both use the shared Modal. Deletion of selected boards is confirmed with DeleteBoardsModal. BoardToolbar deletes selected boards, and AppButton opens the create form."
 
 ### Board
+
 ![Board component graph](assets/component-graphs/Frame%203.png)
 
-"Board" shows a board's lists side by side. "TaskFilter" switches between all, unfinished and finished tasks. Each list is a "BoardList" with a "ProgressBar" and its tasks as "ListTask" items, each with a "CheckButton".  Popups ("Modal") show "TaskForm", "ListForm", "EditList" and "ConfirmDelete", and "BoardToolbar" adds or deletes lists.
+"Board" shows a board's lists side by side. "TaskFilter" switches between all, unfinished and finished tasks. Each list is a "BoardList" with a "ProgressBar" and its tasks as "ListTask" items, each with a "CheckButton". Popups ("Modal") show "TaskModal", "CreateListModal", "EditListModal" and "DeleteSelectedModal", "AddTaskModal" for adding tasks, and "BoardToolbar" adds or deletes lists.

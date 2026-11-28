@@ -3,10 +3,10 @@ import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
 import {
-    moveTask,
-    removeTask,
-    toggleTaskFinished,
-    updateTask,
+  moveTask,
+  removeTask,
+  toggleTaskFinished,
+  updateTask,
 } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
