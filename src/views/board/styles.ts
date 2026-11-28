@@ -44,4 +44,12 @@ export default StyleSheet.create({
   boardHeaderText: {
     flex: 1,
   },
+  noListsMessage: {
+    width: 300,
+    marginTop: 40,
+    marginLeft: 20,
+    textAlign: "center",
+    fontSize: 16,
+    color: "#1A1A1A",
+  }
 });
