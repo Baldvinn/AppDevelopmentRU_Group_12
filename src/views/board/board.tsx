@@ -1,21 +1,17 @@
+import TaskModal from "@/components/task-modal/task-modal";
+import DeleteSelectedModal from "@/components/delete-selected-modal/delete-selected-modal";
+import EditListModal from "@/components/edit-list-modal/edit-list-modal";
+import CreateListModal from "@/components/create-list-modal/create-list-modal";
+import AddTaskModal from "@/components/add-task-modal/add-task-modal";
 import BoardList from "@/components/board-list/board-list";
-import ConfirmDelete from "@/components/confirm-delete/confirm-delete";
-import EditList from "@/components/edit-list/edit-list";
-import ListForm from "@/components/forms/list-form/list-form";
-import TaskForm from "@/components/forms/task-form/task-form";
-import { Modal } from "@/components/modal/modal";
-import TaskDetails from "@/components/task-details/task-details";
 import TaskFilter from "@/components/task-filter/task-filter";
 import { BoardToolbar } from "@/components/toolbar/toolbar";
 import { useSelection } from "@/hooks/useSelection";
 import { useBoards } from "@/saved/boardSave";
-import { addList, deleteList, useLists } from "@/saved/listSave";
+import { deleteList, useLists } from "@/saved/listSave";
 import {
-  addTask,
-  moveTask,
   removeTask,
   toggleTaskFinished,
-  updateTask,
   useTasks,
 } from "@/saved/taskSave";
 import { ListItem } from "@/types/List";
@@ -41,11 +37,6 @@ export default function Board() {
 
   //Store which list's modal is open, null if no list is being edited
   const [editingListId, setEditingListId] = useState<number | null>(null);
-
-  // If task is being edited
-  const [editingTask, setEditingTask] = useState(false);
-
-  const [confirmingTaskDelete, setConfirmingTaskDelete] = useState(false);
 
   // List id the new task is being added to
   const [addingToListId, setAddingToListId] = useState<number | null>(null);
@@ -122,12 +113,6 @@ export default function Board() {
     }
   }
 
-  function closeTaskModal(): void {
-    setViewedTaskId(null);
-    setEditingTask(false);
-    setConfirmingTaskDelete(false);
-  }
-
   return (
     <View style={styles.boardContainer}>
       {/* Board header */}
@@ -197,116 +182,45 @@ export default function Board() {
 
       {/* Modal for confirming removal of selected items */}
       {confirmingSelectedDelete && (
-        <Modal
-          title="Delete selected?"
-          isOpen={confirmingSelectedDelete}
-          closeModal={() => setConfirmingSelectedDelete(false)}
-        >
-          <ConfirmDelete
-            message={deleteMessage}
-            onConfirm={handleDeleteSelected}
-            onCancel={() => setConfirmingSelectedDelete(false)}
-          />
-        </Modal>
+        <DeleteSelectedModal
+          message={deleteMessage}
+          onConfirm={handleDeleteSelected}
+          onClose={() => setConfirmingSelectedDelete(false)}
+        />
       )}
 
       {/* Modal for task details*/}
       {viewedTask && (
-        <Modal
-          task={editingTask || confirmingTaskDelete ? undefined : viewedTask}
-          title={
-            confirmingTaskDelete
-              ? "Remove task?"
-              : editingTask
-                ? "Edit task"
-                : viewedTask.name
-          }
-          isOpen={true}
-          closeModal={closeTaskModal}
-        >
-          {/* Modal contents for Confirm task removal | editing | task details */}
-          {confirmingTaskDelete ? (
-            <ConfirmDelete
-              message={
-                '"' +
-                viewedTask.name +
-                "\" will be deleted. This can't be undone."
-              }
-              onConfirm={() => {
-                removeTask(viewedTask.id);
-                closeTaskModal();
-              }}
-              onCancel={() => setConfirmingTaskDelete(false)}
-            />
-          ) : editingTask ? (
-            <TaskForm
-              initialValues={viewedTask}
-              submitLabel="Save changes"
-              onSubmit={(values) => {
-                updateTask(viewedTask.id, values);
-                setEditingTask(false);
-              }}
-            />
-          ) : (
-            <TaskDetails
-              boardLists={board_lists}
-              task={viewedTask}
-              onToggleTaskFinished={toggleTaskFinished}
-              onMoveTask={moveTask}
-              onOpenEditing={() => setEditingTask(true)}
-              onRemove={() => setConfirmingTaskDelete(true)}
-            />
-          )}
-        </Modal>
+        <TaskModal
+          task={viewedTask}
+          boardLists={board_lists}
+          onClose={() => setViewedTaskId(null)}
+        />
       )}
 
       {/* Modal for adding new task */}
       {addingToListId !== null && (
-        <Modal
-          title="Add new task"
-          isOpen={true}
-          closeModal={() => setAddingToListId(null)}
-        >
-          <TaskForm
-            submitLabel="Add task"
-            onSubmit={(values) => {
-              addTask({ ...values, listId: addingToListId, isFinished: false });
-              setAddingToListId(null);
-            }}
-          />
-        </Modal>
+        <AddTaskModal
+          listId={addingToListId}
+          onClose={() => setAddingToListId(null)}
+        />
       )}
 
       {/* Modal for editing a list */}
       {editingList && (
-        <Modal
-          title="Edit list"
-          isOpen={true}
-          closeModal={() => setEditingListId(null)}
-        >
-          <EditList
-            list={editingList}
-            onClose={() => setEditingListId(null)}
-            currentBoard={board}
-          />
-        </Modal>
+        <EditListModal
+          list={editingList}
+          currentBoard={board}
+          onClose={() => setEditingListId(null)}
+        />
       )}
 
       {/* Modal for creating a list */}
       {creatingList && (
-        <Modal
-          title="Create new list"
-          isOpen={true}
-          closeModal={() => setCreatingList(false)}
-        >
-          <ListForm
-            submitLabel="Create list"
-            onSubmit={(values) => {
-              addList({ ...values, boardId: board.id });
-              setCreatingList(false);
-            }}
-          />
-        </Modal>
+        <CreateListModal
+          boardId={board.id}
+          onClose={() => setCreatingList(false)}
+        />
       )}
     </View>
   );

@@ -1,13 +1,11 @@
+import DeleteBoardsModal from "@/components/delete-board-modal/delete-board-modal";
+import EditBoardModal from "@/components/edit-board-modal/edit-board-modal";
+import CreateBoardModal from "@/components/create-board-modal/create-board-modal";
 import AppButton from "@/components/appbutton/appbutton";
-import ConfirmDelete from "@/components/confirm-delete/confirm-delete";
-import BoardForm from "@/components/forms/board-form/board-form";
-import { Modal } from "@/components/modal/modal";
 import { BoardToolbar } from "@/components/toolbar/toolbar";
 import { useSelection } from "@/hooks/useSelection";
 import {
-  addBoards,
   deleteBoard,
-  updateBoards,
   useBoards,
 } from "@/saved/boardSave";
 import { mildblack } from "@/styles/colors";
@@ -22,7 +20,6 @@ export default function Boards() {
   const boardsSelection = useSelection();
   const [createBoardVisible, setCreateBoardVisible] = useState(false);
   const [editingBoard, setEditingBoard] = useState<BoardItem | null>(null);
-  const [confirmingEditDelete, setConfirmingEditDelete] = useState(false);
   const [confirmSelectedDelete, setConfirmSelectedDelete] = useState(false);
   const boards = useBoards();
 
@@ -43,11 +40,6 @@ export default function Boards() {
     boardsSelection.selected.forEach(deleteBoard);
     boardsSelection.clear();
     setConfirmSelectedDelete(false);
-  }
-
-  function closeEditBoard(): void {
-    setEditingBoard(null);
-    setConfirmingEditDelete(false);
   }
 
   return (
@@ -105,72 +97,23 @@ export default function Boards() {
           onPress={() => setCreateBoardVisible(true)}
         />
       </View>
-      <Modal
-        title="Create new board"
-        isOpen={createBoardVisible}
-        closeModal={() => setCreateBoardVisible(false)}
-      >
-        <BoardForm
-          submitLabel="Create Board"
-          onSubmit={(values) => {
-            addBoards(values);
-            setCreateBoardVisible(false);
-          }}
-        ></BoardForm>
-      </Modal>
+      {createBoardVisible && (
+        <CreateBoardModal onClose={() => setCreateBoardVisible(false)} />
+      )}
 
-      <Modal
-        title={confirmingEditDelete ? "Delete board?" : "Edit board"}
-        isOpen={editingBoard !== null}
-        closeModal={closeEditBoard}
-      >
-        {editingBoard && !confirmingEditDelete && (
-          <>
-            <BoardForm
-              key={editingBoard.id}
-              initialValues={editingBoard}
-              submitLabel="Save changes"
-              onSubmit={(values) => {
-                updateBoards(editingBoard.id, values);
-                closeEditBoard();
-              }}
-            />
-            <AppButton
-              label="Delete board"
-              marginTop={10}
-              onPress={() => setConfirmingEditDelete(true)}
-            />
-          </>
-        )}
-        {editingBoard && confirmingEditDelete && (
-          <ConfirmDelete
-            message={
-              '"' +
-              editingBoard.name +
-              "\" and all of its lists and tasks will be deleted. This can't be undone."
-            }
-            onConfirm={() => {
-              deleteBoard(editingBoard.id);
-              closeEditBoard();
-            }}
-            onCancel={() => setConfirmingEditDelete(false)}
-          />
-        )}
-      </Modal>
-      <Modal
-        title="Delete boards?"
-        isOpen={confirmSelectedDelete}
-        closeModal={() => setConfirmSelectedDelete(false)}
-      >
-        <ConfirmDelete
-          message={
-            boardsSelection.selected.length +
-            " board(s) and all of their lists and tasks will be deleted. This can't be undone."
-          }
-          onConfirm={handleDeleteSelectedBoards}
-          onCancel={() => setConfirmSelectedDelete(false)}
+      {editingBoard && (
+        <EditBoardModal
+          board={editingBoard}
+          onClose={() => setEditingBoard(null)}
         />
-      </Modal>
+      )}
+      {confirmSelectedDelete && (
+        <DeleteBoardsModal
+          count={boardsSelection.selected.length}
+          onConfirm={handleDeleteSelectedBoards}
+          onClose={() => setConfirmSelectedDelete(false)}
+        />
+      )}
     </View>
   );
 }
