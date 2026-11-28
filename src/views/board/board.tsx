@@ -1,12 +1,14 @@
 import BoardList from "@/components/board-list/board-list";
 import ConfirmDelete from "@/components/confirm-delete/confirm-delete";
+import EditList from "@/components/edit-list/edit-list";
+import ListForm from "@/components/forms/list-form/list-form";
 import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
 import { BoardToolbar } from "@/components/toolbar/toolbar";
 import { useSelection } from "@/hooks/useSelection";
 import { useBoards } from "@/saved/boardSave";
-import { deleteList, useLists } from "@/saved/listSave";
+import { addList, deleteList, useLists } from "@/saved/listSave";
 import {
   addTask,
   moveTask,
@@ -35,6 +37,9 @@ export default function Board() {
   // Id of open task in modal
   const [viewedTaskId, setViewedTaskId] = useState<number | null>(null);
 
+  //Store which list's modal is open, null if no list is being edited
+  const [editingListId, setEditingListId] = useState<number | null>(null);
+
   // If task is being edited
   const [editingTask, setEditingTask] = useState(false);
 
@@ -42,6 +47,11 @@ export default function Board() {
 
   // List id the new task is being added to
   const [addingToListId, setAddingToListId] = useState<number | null>(null);
+
+  // If the create list is open
+  const [creatingList, setCreatingList] = useState(false);
+
+  const [confirmingListDelete, setConfirmingListDelete] = useState(false);
 
   // Find the appropriate board
   const board = boards.find((item) => item.id === Number(id));
@@ -58,9 +68,20 @@ export default function Board() {
   // Get the task being viewed in the modal
   const viewedTask = tasks.find((task) => task.id === viewedTaskId);
 
+  //look up the full list using the stored id so the modal always shows the current name and color
+  const editingList = lists.find((list) => list.id === editingListId);
+
+  // Helper functions
+
   function handleDeleteSelectedLists(): void {
     listSelection.selected.forEach(deleteList);
     listSelection.clear();
+    setConfirmingListDelete(false);
+  }
+
+  function requestDeleteSelectedLists(): void {
+    if (listSelection.selected.length === 0) return;
+    setConfirmingListDelete(true);
   }
 
   function onTaskPress(taskId: number): void {
@@ -117,6 +138,7 @@ export default function Board() {
               isListSelected={listSelection.isSelected(item.id)}
               onListLongPress={listSelection.toggle}
               onListPress={onListPress}
+              onEditPress={setEditingListId}
               onAddTaskPress={(listId) => setAddingToListId(listId)}
             />
           )}
@@ -127,8 +149,28 @@ export default function Board() {
         />
       </View>
 
-      <BoardToolbar onDeleteCard={handleDeleteSelectedLists} />
-      {/* Modal for viewing tasks*/}
+      <BoardToolbar
+        onAddCard={() => setCreatingList(true)}
+        addLabel="Add list"
+        onDeleteCard={requestDeleteSelectedLists}
+      />
+
+      {/* Modal for confirming list removal */}
+      {confirmingListDelete && (
+        <Modal
+          title="Delete lists?"
+          isOpen={confirmingListDelete}
+          closeModal={() => setConfirmingListDelete(false)}
+        >
+          <ConfirmDelete
+            message={`${listSelection.selected.length} list(s) and their tasks will be deleted. This can't be undone.`}
+            onConfirm={handleDeleteSelectedLists}
+            onCancel={() => setConfirmingListDelete(false)}
+          />
+        </Modal>
+      )}
+
+      {/* Modal for task details*/}
       {viewedTask && (
         <Modal
           task={editingTask || confirmingTaskDelete ? undefined : viewedTask}
@@ -142,7 +184,7 @@ export default function Board() {
           isOpen={true}
           closeModal={closeTaskModal}
         >
-          {/* Confirm removing, else editing, else details */}
+          {/* Modal contents for Confirm task removal | editing | task details */}
           {confirmingTaskDelete ? (
             <ConfirmDelete
               message={
@@ -177,6 +219,8 @@ export default function Board() {
           )}
         </Modal>
       )}
+
+      {/* Modal for adding new task */}
       {addingToListId !== null && (
         <Modal
           title="Add new task"
@@ -188,6 +232,34 @@ export default function Board() {
             onSubmit={(values) => {
               addTask({ ...values, listId: addingToListId, isFinished: false });
               setAddingToListId(null);
+            }}
+          />
+        </Modal>
+      )}
+
+      {/* Modal for editing a list */}
+      {editingList && (
+        <Modal
+          title="Edit list"
+          isOpen={true}
+          closeModal={() => setEditingListId(null)}
+        >
+          <EditList list={editingList} onClose={() => setEditingListId(null)} />
+        </Modal>
+      )}
+
+      {/* Modal for creating a list */}
+      {creatingList && (
+        <Modal
+          title="Create new list"
+          isOpen={true}
+          closeModal={() => setCreatingList(false)}
+        >
+          <ListForm
+            submitLabel="Create list"
+            onSubmit={(values) => {
+              addList({ ...values, boardId: board.id });
+              setCreatingList(false);
             }}
           />
         </Modal>

@@ -1,11 +1,9 @@
-import { lightblue, lightgrey, mildblack } from "@/styles/colors";
+import { lightgrey, mildblack } from "@/styles/colors";
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: lightblue,
+    gap: 8,
   },
   label: {
     fontSize: 16,

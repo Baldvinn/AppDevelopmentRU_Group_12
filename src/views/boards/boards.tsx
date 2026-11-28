@@ -58,6 +58,11 @@ export default function Boards() {
         contentContainerStyle={styles.list}
         style={styles.screen}
         keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={
+          <Text style={styles.noBoardsMessage}>
+            You have no boards, feel free to create one.
+          </Text>
+        }
         renderItem={({ item }) => (
           <Pressable
             style={[

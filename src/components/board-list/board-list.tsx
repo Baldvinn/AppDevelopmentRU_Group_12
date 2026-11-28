@@ -2,7 +2,6 @@ import { getTextColorFor } from "@/styles/colors";
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import {
   FlatList,
   Pressable,
@@ -21,6 +20,7 @@ interface BoardListProps {
   onTaskPress: (id: number) => void;
   onTaskLongPress: (id: number) => void;
   onToggleTaskFinished: (id: number) => void;
+  onEditPress: (listId: number) => void;
   onListLongPress: (listId: number) => void;
   onAddTaskPress: (id: number) => void;
   onListPress: (id: number) => void;
@@ -45,13 +45,13 @@ export default function BoardList(props: BoardListProps) {
     >
       <View style={[styles.listHeader, { backgroundColor: headerColor }]}>
         <Pressable
+          accessibilityLabel={"Add task"}
           onPress={() => props.onAddTaskPress(props.list.id)}
           style={styles.sideAction}
         >
           <Ionicons name="add-circle" size={24} color={headerTextColor} />
         </Pressable>
         <Pressable
-          accessibilityLabel={"Add task"}
           onLongPress={() => props.onListLongPress(props.list.id)}
           onPress={() => props.onListPress(props.list.id)}
           style={{ flex: 1 }}
@@ -62,12 +62,7 @@ export default function BoardList(props: BoardListProps) {
         </Pressable>
         <Pressable
           style={styles.sideAction}
-          onPress={() =>
-            router.push({
-              pathname: "/edit-list",
-              params: { id: props.list.id.toString() },
-            })
-          }
+          onPress={() => props.onEditPress(props.list.id)}
         >
           <Ionicons name="pencil" size={16} color={headerTextColor} />
           <Text style={[styles.editText, { color: headerTextColor }]}>
@@ -81,6 +76,9 @@ export default function BoardList(props: BoardListProps) {
         contentContainerStyle={styles.listContent}
         data={props.tasks}
         keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={
+          <Text style={styles.noTaskMessage}>This list has no tasks yet</Text>
+        }
         renderItem={({ item }) => (
           <ListTask
             task={item}

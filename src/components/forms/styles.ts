@@ -1,4 +1,4 @@
-import { lightgrey, lightred } from "@/styles/colors";
+import { lightgrey, lightred, mildblack } from "@/styles/colors";
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
@@ -15,5 +15,23 @@ export default StyleSheet.create({
     color: lightred,
     marginTop: -10,
     marginBottom: 10,
+  },
+  colorRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 5,
+    marginBottom: 15,
+  },
+  colorCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: lightgrey,
+  },
+  colorSelected: {
+    borderWidth: 3,
+    borderColor: mildblack,
   },
 });
