@@ -69,15 +69,17 @@ export default function BoardList(props: BoardListProps) {
             {props.list.name}
           </Text>
         </Pressable>
-        <Pressable
-          style={styles.sideAction}
-          onPress={() => props.onEditPress(props.list.id)}
-        >
-          <Ionicons name="pencil" size={16} color={headerTextColor} />
-          <Text style={[styles.editText, { color: headerTextColor }]}>
-            Edit
-          </Text>
-        </Pressable>
+        {!props.isListSelected && (
+          <Pressable
+            style={styles.sideAction}
+            onPress={() => props.onEditPress(props.list.id)}
+          >
+            <Ionicons name="pencil" size={16} color={headerTextColor} />
+            <Text style={[styles.editText, { color: headerTextColor }]}>
+              Edit
+            </Text>
+          </Pressable>
+        )}
       </View>
       <ProgressBar
         completed={completed.length}
