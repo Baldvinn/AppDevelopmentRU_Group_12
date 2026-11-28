@@ -4,7 +4,7 @@ import { Pressable, Text, View } from "react-native";
 import CheckButton from "../check-button/check-button";
 import styles from "./styles";
 
-interface TaskProps {
+interface ListTaskProps {
   task: TaskItem;
   isSelected: boolean;
   onTaskPress: (id: number) => void;
@@ -12,7 +12,7 @@ interface TaskProps {
   onToggleTaskFinished: (id: number) => void;
 }
 
-export default function ListTask(props: TaskProps) {
+export default function ListTask(props: ListTaskProps) {
   return (
     <Pressable
       style={[styles.taskCard, props.isSelected && styles.selectedTask]}
@@ -21,7 +21,7 @@ export default function ListTask(props: TaskProps) {
     >
       <View style={styles.taskHeader}>
         <Text
-          key={`${props.task.id}-${props.task.isFinished}`}
+          key={String(props.task?.isFinished)}
           style={[
             headings.h4,
             styles.taskName,

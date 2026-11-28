@@ -20,10 +20,10 @@ interface BoardListProps {
   onTaskPress: (id: number) => void;
   onTaskLongPress: (id: number) => void;
   onToggleTaskFinished: (id: number) => void;
-  onCreateTask: (name: string, description: string, listId: number) => void;
   onEditPress: (listId: number) => void;
   onListLongPress: (listId: number) => void;
   onAddTaskPress: (id: number) => void;
+  onListPress: (id: number) => void;
 }
 
 export default function BoardList(props: BoardListProps) {
@@ -45,14 +45,15 @@ export default function BoardList(props: BoardListProps) {
     >
       <View style={[styles.listHeader, { backgroundColor: headerColor }]}>
         <Pressable
+          accessibilityLabel={"Add task"}
           onPress={() => props.onAddTaskPress(props.list.id)}
           style={styles.sideAction}
         >
           <Ionicons name="add-circle" size={24} color={headerTextColor} />
         </Pressable>
         <Pressable
-          accessibilityLabel={"Add task"}
           onLongPress={() => props.onListLongPress(props.list.id)}
+          onPress={() => props.onListPress(props.list.id)}
           style={{ flex: 1 }}
         >
           <Text style={[styles.listName, { color: headerTextColor }]}>

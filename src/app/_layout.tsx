@@ -3,7 +3,6 @@ import { Pressable, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function RootLayout() {
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack
@@ -35,9 +34,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ headerTitle: "Main menu" }} />
         <Stack.Screen name="boards" />
         <Stack.Screen name="board" />
-        <Stack.Screen name="task" />
       </Stack>
-      
     </GestureHandlerRootView>
   );
 }
