@@ -99,12 +99,15 @@ export default function Boards() {
         )}
       />
       <View style={styles.buttonContainer}>
+        <BoardToolbar
+          style={{ alignSelf: "flex-start" }}
+          onDeleteCard={requestDeleteSelectedBoards}
+        />
         <AppButton
           label="Create new board"
           onPress={() => setCreateBoardVisible(true)}
         />
       </View>
-      <BoardToolbar onDeleteCard={requestDeleteSelectedBoards} />
       <Modal
         title="Create new board"
         isOpen={createBoardVisible}
