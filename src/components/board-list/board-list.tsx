@@ -1,6 +1,7 @@
 import { getTextColorFor } from "@/styles/colors";
 import { ListItem } from "@/types/List";
 import { TaskItem } from "@/types/Task";
+import { TaskFilter } from "@/types/TaskFilter";
 import { Ionicons } from "@expo/vector-icons";
 import {
   FlatList,
@@ -25,6 +26,7 @@ interface BoardListProps {
   onListLongPress: (listId: number) => void;
   onAddTaskPress: (id: number) => void;
   onListPress: (id: number) => void;
+  filter: TaskFilter;
 }
 
 export default function BoardList(props: BoardListProps) {
@@ -35,6 +37,12 @@ export default function BoardList(props: BoardListProps) {
 
   const completed = props.tasks.filter((task) => task.isFinished === true);
   const incomplete = props.tasks.filter((task) => task.isFinished === false);
+  const visibleTasks =
+    props.filter === "done"
+      ? completed
+      : props.filter === "todo"
+        ? incomplete
+        : props.tasks;
 
   return (
     <View
@@ -79,10 +87,16 @@ export default function BoardList(props: BoardListProps) {
       <FlatList<TaskItem>
         style={styles.taskList}
         contentContainerStyle={styles.listContent}
-        data={props.tasks}
+        data={visibleTasks}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={
-          <Text style={styles.noTaskMessage}>This list has no tasks yet</Text>
+          <Text style={styles.noTaskMessage}>
+            {props.tasks.length === 0
+              ? "This list has no tasks yet"
+              : props.filter === "done"
+                ? "No finished tasks in this list"
+                : "No unfinished tasks in this list"}
+          </Text>
         }
         renderItem={({ item }) => (
           <ListTask
