@@ -6,6 +6,8 @@ import TaskForm from "@/components/forms/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
 import TaskDetails from "@/components/task-details/task-details";
 import { BoardToolbar } from "@/components/toolbar/toolbar";
+import TaskFilter from "@/components/task-filter/task-filter";
+import { TaskFilter as Filter } from "@/types/TaskFilter";
 import { useSelection } from "@/hooks/useSelection";
 import { useBoards } from "@/saved/boardSave";
 import { addList, deleteList, useLists } from "@/saved/listSave";
@@ -52,6 +54,9 @@ export default function Board() {
   const [creatingList, setCreatingList] = useState(false);
 
   const [confirmingListDelete, setConfirmingListDelete] = useState(false);
+
+  // Wich tasks to show in every list
+  const [filter, setFilter] = useState<Filter>("all");
 
   // Find the appropriate board
   const board = boards.find((item) => item.id === Number(id));
@@ -120,6 +125,8 @@ export default function Board() {
         </View>
       </View>
 
+      <TaskFilter value={filter} onChange={setFilter}></TaskFilter>
+
       {/* Contents of a board */}
       <View style={styles.boardContents}>
         <FlatList<ListItem>
@@ -145,11 +152,13 @@ export default function Board() {
               onListPress={onListPress}
               onEditPress={setEditingListId}
               onAddTaskPress={(listId) => setAddingToListId(listId)}
+              filter={filter}
             />
           )}
           extraData={{
             selectedTasks: taskSelection.selected,
             selectedLists: listSelection.selected,
+            filter,
           }}
         />
       </View>
